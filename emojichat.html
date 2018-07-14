@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js"></script>
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: rgb(230, 230, 230);
+        }
+        .emoji-fix {
+            font-family: apple color emoji, segoe ui emoji, notocoloremoji, segoe ui symbol, android emoji, emojisymbols, emojione mozilla;
+            font-weight: 400;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function printGModConsole(message) {
+            console.log( "RUNLUA:print( \"" + message + "\" )" )
+        }
+
+        function convert(input) {
+            return emojione.toImage(input);
+        }
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            printGModConsole("Error- '" + message + "'" )
+        }
+    </script>
+    <p>Normal Fox: '🦊'</p>
+    <p>Normal Grin: '😀'</p>
+    <p class="emoji-fix">Fox: '🦊'</p>
+    <p class="emoji-fix">Grin: '😀'</p>
+    <p>Alt Fox: '<i class="em em-fox_face"></i>'</p>
+    <p>Image Fox: <img src="https://twemoji.maxcdn.com/2/72x72/1f98a.png"/></p>
+    <p id="output-fox"></p>
+    <input type='submit' onclick='printGModConsole("This is called in Lua context")' />
+
+    <script>
+        var element = document.getElementById("output-fox");
+        element.innerHTML = convert("EmojiOne Fox: '🦊'");
+    </script>
+</body>
+
+</html>
