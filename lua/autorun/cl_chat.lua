@@ -160,6 +160,7 @@ function eChat.buildBox()
 	eChat.oldPaint2 = eChat.chatLog.Paint
 	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
 	eChat.chatLog:SetAllowLua( true ) // TODO: Disable
+	UpdateFadeTime()
 	
 	local text = "Say :"
 
@@ -213,8 +214,6 @@ function eChat.hideBox()
 	SetTextOutputInactive()
 	ScrollToTextEnd()
 	
-	eChat.lastMessage = eChat.lastMessage or CurTime() - eChat.config.fadeTime
-	
 	-- Hide the chatbox except the log
 	local children = eChat.frame:GetChildren()
 	for _, pnl in pairs( children ) do
@@ -245,7 +244,6 @@ function eChat.showBox()
 	eChat.chatLog.Paint = eChat.oldPaint2
 	
 	SetTextOutputActive()
-	eChat.lastMessage = nil
 	
 	-- Show any hidden children
 	local children = eChat.frame:GetChildren()
@@ -336,7 +334,7 @@ function eChat.openSettings()
 		eChat.frameS:Close()
 		
 		eChat.config.timeStamps = checkbox1:GetChecked() 
-		eChat.config.fadeTime = tonumber(textEntry:GetText()) or eChat.config.fadeTime
+		UpdateFadeTime(tonumber(textEntry:GetText()))
 	end
 end
 
@@ -395,7 +393,6 @@ function chat.AddText(...)
 	RenderTextLine(textComponents)
 
 	eChat.chatLog:SetVisible( true )
-	eChat.lastMessage = CurTime()
 end
 
 --// Write any server notifications
@@ -408,7 +405,6 @@ hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	
 	if type != "chat" then
 		eChat.chatLog:SetVisible( true )
-		eChat.lastMessage = CurTime()
 
 		RenderTextLine({ { text = text.."\n", colour = Color(0, 128, 255, 255) } })
 		return true
@@ -486,4 +482,11 @@ end
 
 function ScrollToTextEnd()
 	eChat.chatLog:QueueJavascript("scrollToBottom()")
+end
+
+function UpdateFadeTime(durationInSeconds)
+	if(durationInSeconds != nil) then
+		eChat.config.fadeTime = durationInSeconds;
+	end
+	eChat.chatLog:QueueJavascript("setFadeTime(" .. eChat.config.fadeTime .. ")")
 end

@@ -23,8 +23,6 @@ General chatbox stuff:
 
 
 TODO: 
-* Integrate HTML renderer into chat box
-    * Add basic fade out
 * Replace text entry with HTML version
     * Will need to call out to Lua
         * eChat.entry.OnTextChanged
@@ -34,7 +32,6 @@ TODO:
     * Maybe try to fix the "space in name" problem
     * And non-typeable characters problem
 * Make sure basics work- ctrl+a/c/v/x
-* Make fade-out not wack (gradual, faded out text stays faded out not this all or nothing BS)
 * Make double quotes work in this version
 * Font looks awful over bright lights
 * Make entity messages a blue colour
@@ -43,6 +40,9 @@ TODO:
     * Allow styling tags?
         * Could allow some basic markdown
     * Maybe show history before player joined?
+    * How will this hook into other chat systems?
+        * Tags etc
+    * Update emojione version
 * Tidy up
     * Sort out all the logic which builds the text box if it doesn't exist already
         * Just update the state and rely on the text box using the current state when it is drawn

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
@@ -22,9 +23,14 @@
             margin: 0;
             overflow: hidden;
         }
+
         #output {
             overflow: hidden;
             height: 100%;
+        }
+
+        .inactive-line {
+            opacity: 0;
         }
     </style>
 </head>
@@ -32,16 +38,38 @@
 <body>
     <div id="output"></div>
     <script>
-        function setActive(){
-           document.getElementById("output").style["overflow-y"] = "scroll";
+        var currentLine = 0;
+        var active = false;
+        var fadeTimeSeconds = 5;
+
+        function setFadeTime(durationInSeconds) {
+            fadeTimeSeconds = durationInSeconds;
         }
 
-        function setInactive(){
-           document.getElementById("output").style["overflow-y"] = "hidden";
+        function setActive() {
+            active = true;
+            document.getElementById("output").style["overflow-y"] = "scroll";
+
+            var lines = document.getElementsByClassName("line");
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                line.classList.remove("inactive-line");
+            }
+        }
+
+        function setInactive() {
+            active = false;
+            document.getElementById("output").style["overflow-y"] = "hidden";
+
+            var lines = document.getElementsByClassName("faded-line");
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                line.classList.add("inactive-line");
+            }
         }
 
         function printGModConsole(message) {
-            console.log( "RUNLUA:print( \"" + message + "\" )" )
+            console.log("RUNLUA:print( \"" + message + "\" )")
         }
 
         function convert(input) {
@@ -56,25 +84,37 @@
             var textComponents = JSON.parse(rawTextComponents);
             var formattedLine = "";
 
-            for(var i = 0; i < textComponents.length; i++) {
+            for (var i = 0; i < textComponents.length; i++) {
                 var component = textComponents[i];
                 var colour = colourToRGBA(component.colour);
                 var message = convert(_.escape(component.text));
                 formattedLine += "<span style=\"color: " + colour + "\">" + message + "</span>";
             }
 
-            document.getElementById("output").innerHTML += formattedLine + "<br>";
+            var id = "line-" + (currentLine++);
+            document.getElementById("output").innerHTML += "<span id='" + id + "' class='line'>" + formattedLine + "</span><br>";
             scrollToBottom();
+            fadeOutLine(id);
         }
 
-        function scrollToBottom(){
+        function scrollToBottom() {
             var element = document.getElementById("output");
             element.scrollTop = element.scrollHeight;
         }
 
-        window.onerror = function(message, source, lineno, colno, error) {
+        function fadeOutLine(id) {
+            setTimeout(function () {
+                var element = document.getElementById(id)
+                element.classList.add("faded-line");
+
+                if(!active)
+                    element.classList.add("inactive-line");
+            }, fadeTimeSeconds * 1000);
+        }
+
+        window.onerror = function (message, source, lineno, colno, error) {
             // TODO: Gmod already prints this
-            printGModConsole("Error- '" + message + "' " + source + ", " + lineno + ' (' + colno + ') ' )
+            printGModConsole("Error- '" + message + "' " + source + ", " + lineno + ' (' + colno + ') ')
             printGModConsole(JSON.stringify(error));
         }
 
