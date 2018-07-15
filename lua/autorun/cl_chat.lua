@@ -182,7 +182,8 @@ function eChat.buildBox()
 	/*
 	eChat.chatLog:Dock( FILL )
 	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
-	eChat.chatLog:SetAllowLua( true ) // TODO: Disable*/
+	eChat.chatLog:SetAllowLua( true ) // TODO: Disable
+	*/
 
 	
 	local text = "Say :"
@@ -390,6 +391,11 @@ function TextComponent(text, colour)
 	return component
 end
 
+function RenderTextLine(textComponents)
+	local json = string.JavascriptSafe(util.TableToJSON(textComponents))
+	eChat.html.Renderer:QueueJavascript("addOutput('" .. json  .. "')")
+end
+
 --// Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
 	if not eChat.chatLog then
@@ -433,8 +439,7 @@ function chat.AddText(...)
 		end
 	end
 
-	local json = string.JavascriptSafe(util.TableToJSON(textComponents))
-	eChat.html.Renderer:QueueJavascript("addOutput('" .. json  .. "')")
+	RenderTextLine(textComponents)
 
 	eChat.chatLog:AppendText("\n")
 	
@@ -452,11 +457,12 @@ hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	end
 	
 	if type != "chat" then
-		// TODO: Call JS to render this
 		eChat.chatLog:InsertColorChange( 0, 128, 255, 255 )
 		eChat.chatLog:AppendText( text.."\n" )
 		eChat.chatLog:SetVisible( true )
 		eChat.lastMessage = CurTime()
+
+		RenderTextLine({ { text = text.."\n", colour = Color(0, 128, 255, 255) } })
 		return true
 	end
 end)
