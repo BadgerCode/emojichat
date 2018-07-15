@@ -181,7 +181,7 @@ function eChat.buildBox()
 	// TODO: Enable
 	/*
 	eChat.chatLog:Dock( FILL )
-	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
+	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
 	eChat.chatLog:SetAllowLua( true ) // TODO: Disable
 	*/
 
@@ -536,6 +536,6 @@ function eChat.buildHTMLRenderer()
 	--Fill the form with a html page
 	eChat.html.Renderer = vgui.Create( "DHTML" , eChat.html.Frame )
 	eChat.html.Renderer:Dock( FILL )
-	eChat.html.Renderer:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
+	eChat.html.Renderer:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
 	eChat.html.Renderer:SetAllowLua( true )
 end
