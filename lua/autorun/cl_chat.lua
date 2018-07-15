@@ -506,3 +506,7 @@ function eChat.SendMessage(message)
 	SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
 	eChat.hideBox()
 end
+
+function eChat.InputChange(newValue)
+	gamemode.Call( "ChatTextChanged", newValue )
+end

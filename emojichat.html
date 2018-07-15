@@ -193,6 +193,10 @@
             console.log("RUNLUA:eChat.SendMessage( \"" + message + "\" )")
         }
 
+        function inputChangeCallback(newValue) {
+            console.log("RUNLUA:eChat.InputChange( \"" + newValue + "\" )")
+        }
+
 
         // Logic
         function convert(input) {
@@ -219,6 +223,12 @@
                 if (event.keyCode === 13) {
                     sendMessage(getInputBox().value);
                 }
+            });
+
+        getInputBox()
+            .addEventListener("input", function (event) {
+                event.preventDefault();
+                inputChangeCallback(getInputBox().value);
             });
 
 
