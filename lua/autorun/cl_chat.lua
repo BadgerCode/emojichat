@@ -28,11 +28,14 @@ https://github.com/Exho1/eChat/blob/master/lua/autorun/cl_chat.lua
 */
 
 /* TODO: 
-	* Actually render text in the HTML version
-		* Add JS functions
-			* Add lines of text
-			* Scroll to bottom
-			* Toggle vertical scrollbar (maybe disable the lua code for this)
+	* Integrate HTML renderer into chat box
+		* Make it hide/show the same as the other one
+		* Add basic fade out
+		* Hide scrollbars when not active
+		* DELETE old one
+	* Replace text entry with HTML version
+		* Will need to call out to Lua
+			* eChat.entry.OnTextChanged
 	* Tab auto-complete emoji
 		* Show selectable suggestions (like discord)
 	* Tab auto-complete player name
@@ -41,6 +44,11 @@ https://github.com/Exho1/eChat/blob/master/lua/autorun/cl_chat.lua
 	* Make sure basics work- ctrl+a/c/v/x
 	* Make fade-out not wack (gradual, faded out text stays faded out not this all or nothing BS)
 	* Make double quotes work in this version
+	* Font looks awful over bright lights
+	* Future
+		* Support for server-custom emojis?
+		* Allow styling tags?
+			* Could allow some basic markdown
 */
 
 
@@ -427,6 +435,11 @@ end
 
 local oldAddText = chat.AddText
 
+function TextComponent(text, colour)
+	local component = { text = text, colour = colour }
+	return component
+end
+
 --// Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
 	// TODO: Call javascript to render a line of text in the HTML view
@@ -436,52 +449,51 @@ function chat.AddText(...)
 		eChat.buildBox()
 	end
 	
-	local msg = {}
+	local defaultTextColour = Color(255, 255, 255, 255)
+	local activeColour = Color(255, 255, 255, 255) // TODO: Default chat colour
+	local textComponents = {}
 	
 	//eChat.html.Renderer:QueueJavascript("addOutput('badger', 'I come from LUA')")
 
+	// TODO: Delete all eChat.chatLog lines
 	-- Iterate through the strings and colors
 	for _, obj in pairs( {...} ) do
 		if type(obj) == "table" then
 			eChat.chatLog:InsertColorChange( obj.r, obj.g, obj.b, obj.a )
-			table.insert( msg, Color(obj.r, obj.g, obj.b, obj.a) )
+			activeColour = obj
 		elseif type(obj) == "string"  then
 			eChat.chatLog:AppendText( obj )
-			table.insert( msg, obj )
+			table.insert( textComponents, TextComponent(obj, activeColour))
 		elseif obj:IsPlayer() then
 			local ply = obj
 			
-			if eChat.config.timeStamps then
+			if eChat.config.timeStamps then // TODO: Maybe better logic to detect when a timestamp is needed
 				eChat.chatLog:InsertColorChange( 130, 130, 130, 255 )
 				eChat.chatLog:AppendText( "["..os.date("%X").."] ")
+
+				table.insert( textComponents, TextComponent("["..os.date("%X").."] ", Color(130, 130, 130, 255)))
 			end
-			
-			if eChat.config.seeChatTags and ply:GetNWBool("eChat_tagEnabled", false) then
-				local col = ply:GetNWString("eChat_tagCol", "255 255 255")
-				local tbl = string.Explode(" ", col )
-				eChat.chatLog:InsertColorChange( tbl[1], tbl[2], tbl[3], 255 )
-				eChat.chatLog:AppendText( "["..ply:GetNWString("eChat_tag", "N/A").."] ")
-			end
-			
+
 			local col = GAMEMODE:GetTeamColor( obj )
 			eChat.chatLog:InsertColorChange( col.r, col.g, col.b, 255 )
 			eChat.chatLog:AppendText( obj:Nick() )
-			table.insert( msg, obj:Nick() )
+
+			table.insert( textComponents, TextComponent(ply:Nick(), Color(col.r, col.g, col.b, 255)))
 		elseif IsEntity(obj) then
-			table.insert( msg, obj:GetClass() )
+			// TODO: Maybe make this a blue colour
+			table.insert( textComponents, TextComponent(obj:GetClass(), defaultTextColour))
 		end
 	end
-	// TODO: What about non-player entities that should be to-string'd?
-	// print entity:GetClass(), maybe in some kind of blue colour
 
-	eChat.html.Renderer:QueueJavascript("addOutput('" .. util.TableToJSON(msg)  .. "')")
+	local json = string.JavascriptSafe(util.TableToJSON(textComponents))
+	eChat.html.Renderer:QueueJavascript("addOutput('" .. json  .. "')")
 
 	eChat.chatLog:AppendText("\n")
 	
 	eChat.chatLog:SetVisible( true )
 	eChat.lastMessage = CurTime()
 	eChat.chatLog:InsertColorChange( 255, 255, 255, 255 )
---	oldAddText(unpack(msg))
+--	oldAddText(unpack(textComponents))
 end
 
 --// Write any server notifications

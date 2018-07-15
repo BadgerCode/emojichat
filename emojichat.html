@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js"></script>
     <style>
         body {
-            background-color: rgba(0, 0, 0, 0.5);
+            /*background-color: rgba(0, 0, 0, 0.5);*/
+            background-color: transparent;
             color: rgb(230, 230, 230);
         }
         .emoji-fix {
@@ -20,6 +22,7 @@
 </head>
 
 <body>
+    <div id="output"></div>
     <script>
         function printGModConsole(message) {
             console.log( "RUNLUA:print( \"" + message + "\" )" )
@@ -29,9 +32,22 @@
             return emojione.toImage(input);
         }
 
-        function addOutput(message) {
-            var formattedLine = convert(message) + "<br>";
-            document.getElementById("output").innerHTML += formattedLine;
+        function colourToRGBA(colour) {
+            return "rgba(" + colour.r + "," + colour.g + "," + colour.b + "," + colour.a + ")";
+        }
+
+        function addOutput(rawTextComponents) {
+            var textComponents = JSON.parse(rawTextComponents);
+            var formattedLine = "";
+
+            for(var i = 0; i < textComponents.length; i++) {
+                var component = textComponents[i];
+                var colour = colourToRGBA(component.colour);
+                var message = convert(_.escape(component.text));
+                formattedLine += "<span style=\"color: " + colour + "\">" + message + "</span>";
+            }
+
+            document.getElementById("output").innerHTML += formattedLine + "<br>";
             scrollToBottom();
         }
 
@@ -40,23 +56,10 @@
         }
 
         window.onerror = function(message, source, lineno, colno, error) {
-            printGModConsole("Error- '" + message + "'" )
+            // TODO: Gmod already prints this
+            printGModConsole("Error- '" + message + "' " + source + ", " + lineno + ' (' + colno + ') ' )
+            printGModConsole(JSON.stringify(error));
         }
-    </script>
-    <p>Normal Fox: '🦊'</p>
-    <p>Normal Grin: '😀'</p>
-    <p class="emoji-fix">Fox: '🦊'</p>
-    <p class="emoji-fix">Grin: '😀'</p>
-    <p>Alt Fox: '<i class="em em-fox_face"></i>'</p>
-    <p>Image Fox: <img src="https://twemoji.maxcdn.com/2/72x72/1f98a.png"/></p>
-    <p id="output-fox"></p>
-    <div id="output"></div>
-    <button onclick='addOutput("badger: test message")'>AddLine</button>
-    <input type='submit' onclick='printGModConsole("This is called in Lua context")' />
-
-    <script>
-        var element = document.getElementById("output-fox");
-        element.innerHTML = convert("EmojiOne Fox: '🦊'");
 
         scrollToBottom();
     </script>
