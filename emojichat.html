@@ -204,6 +204,10 @@
             console.log("RUNLUA:eChat.CloseChat()")
         }
 
+        function changeTextEntryMode() {
+            console.log("RUNLUA:eChat.ChangeTextEntryMode()")
+        }
+
 
         // Logic
         function convert(input) {
@@ -239,6 +243,10 @@
                 if (key === 27) {
                     event.preventDefault();
                     closeChat();
+                }
+                else if(key === 9) {
+                    event.preventDefault();
+                    changeTextEntryMode();
                 }
             });
 

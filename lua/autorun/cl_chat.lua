@@ -110,22 +110,13 @@ function eChat.buildBox()
 	end
 
 	eChat.entry.OnKeyCodeTyped = function( self, code )
-		local types = {"", "teamchat", "console"}
-
 		if code == KEY_ESCAPE then
 			eChat.CloseChat()
 
 		elseif code == KEY_TAB then
 			// TODO: Keep this feature? Will it mess with player name and emoji completion
 
-			local newMode = eChat.SelectedTextEntryMode + 1
-			if(newMode > TEXTENTRYMODE_CONSOLE) then
-				newMode = TEXTENTRYMODE_GLOBAL
-			end
-
-			SelectTextEntryMode(newMode);
-
-			timer.Simple(0.001, function() eChat.entry:RequestFocus() end)
+			eChat.ChangeTextEntryMode()
 
 		elseif code == KEY_ENTER then
 			-- Replicate the client pressing enter
@@ -160,7 +151,6 @@ function eChat.buildBox()
 	end
 
 	say.Think = function( self )
-		local types = {"", "teamchat", "console"}
 		local s = {}
 
 		if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then 
@@ -505,6 +495,15 @@ end
 function eChat.CloseChat()
 	eChat.hideBox()
 	gui.HideGameUI()
+end
+
+function eChat.ChangeTextEntryMode()
+	local newMode = eChat.SelectedTextEntryMode + 1
+	if(newMode > TEXTENTRYMODE_CONSOLE) then
+		newMode = TEXTENTRYMODE_GLOBAL
+	end
+
+	SelectTextEntryMode(newMode);
 end
 
 hook.Add("ChatTextChanged", "testmycallback", function(newValue)

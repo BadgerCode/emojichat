@@ -28,6 +28,7 @@ TODO:
         * eChat.entry.OnTextChanged
     * Maybe fix rendering of emojis in textbox
 * Fix player joins not showing
+* Intercept ` key presses and prevent console from showing up
 * Tab auto-complete emoji
     * Show selectable suggestions (like discord)
 * Tab auto-complete player name
