@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js"></script>
     <style>
         body {
-            /*background-color: rgba(0, 0, 0, 0.5);*/
             background-color: transparent;
             color: rgb(230, 230, 230);
             position: absolute;
@@ -25,22 +24,106 @@
         }
 
         #output {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 25px;
             overflow: hidden;
-            height: 100%;
         }
 
         .inactive-line {
             opacity: 0;
+        }
+
+        #input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            display: none;
+        }
+
+        #input-box-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        #input-box {
+            background: transparent;
+            color: rgb(230, 230, 230);
+            height: 25px;
+            font-size: 16px;
+            padding: 0;
+            border: 0;
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
     <div id="output"></div>
+    <div id="input">
+        <span id="input-prompt"></span>
+        <div id="input-box-wrapper">
+            <input id="input-box" type="text" />
+        </div>
+    </div>
     <script>
+        var TextEntryMode = {
+            Global: 1,
+            Team: 2,
+            Console: 3
+        };
+
+        var TextPrompts = {};
+        TextPrompts[TextEntryMode.Global] = "Say :";
+        TextPrompts[TextEntryMode.Team] = "Say (TEAM) :";
+        TextPrompts[TextEntryMode.Console] = "Console :";
+
         var currentLine = 0;
         var active = false;
         var fadeTimeSeconds = 5;
+        var selectedTextEntryMode = TextEntryMode.Global;
+
+
+        // DOM
+        function getOutputElement() {
+            return document.getElementById("output");
+        }
+
+        function getInputWrapper() {
+            return document.getElementById("input");
+        }
+
+        function getInputPrompt() {
+            return document.getElementById("input-prompt");
+        }
+
+        function getInputBoxWrapper() {
+            return document.getElementById("input-box-wrapper");
+        }
+
+        function getInputBox() {
+            return document.getElementById("input-box");
+        }
+
+
+        // Input
+        function setTextEntryMode(textEntryMode) {
+            selectedTextEntryMode = textEntryMode;
+            var message = TextPrompts[selectedTextEntryMode]; // TODO: Default to global?
+
+            var inputPrompt = getInputPrompt();
+            inputPrompt.innerHTML = message;
+            setTimeout(function () {
+                var leftMargin = getInputPrompt().offsetWidth + 10;
+                getInputBoxWrapper().style.left = leftMargin + "px";
+            }, 10);
+        }
 
         function setFadeTime(durationInSeconds) {
             fadeTimeSeconds = durationInSeconds;
@@ -48,7 +131,10 @@
 
         function setActive() {
             active = true;
-            document.getElementById("output").style["overflow-y"] = "scroll";
+            setTextEntryMode(selectedTextEntryMode);
+            getOutputElement().style["overflow-y"] = "scroll";
+            getInputWrapper().style["display"] = "block";
+            getInputBox().focus();
 
             var lines = document.getElementsByClassName("line");
             for (var i = 0; i < lines.length; i++) {
@@ -59,25 +145,15 @@
 
         function setInactive() {
             active = false;
-            document.getElementById("output").style["overflow-y"] = "hidden";
+            getOutputElement().style["overflow-y"] = "hidden";
+            getInputWrapper().style["display"] = "none";
+            getInputBox().value = "";
 
             var lines = document.getElementsByClassName("faded-line");
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i];
                 line.classList.add("inactive-line");
             }
-        }
-
-        function printGModConsole(message) {
-            console.log("RUNLUA:print( \"" + message + "\" )")
-        }
-
-        function convert(input) {
-            return emojione.toImage(input);
-        }
-
-        function colourToRGBA(colour) {
-            return "rgba(" + colour.r + "," + colour.g + "," + colour.b + "," + colour.a + ")";
         }
 
         function addOutput(rawTextComponents) {
@@ -92,24 +168,19 @@
             }
 
             var id = "line-" + (currentLine++);
-            document.getElementById("output").innerHTML += "<span id='" + id + "' class='line'>" + formattedLine + "</span><br>";
+            getOutputElement().innerHTML += "<span id='" + id + "' class='line'>" + formattedLine + "</span><br>";
             scrollToBottom();
             fadeOutLine(id);
         }
 
         function scrollToBottom() {
-            var element = document.getElementById("output");
-            element.scrollTop = element.scrollHeight;
+            getOutputElement().scrollTop = getOutputElement().scrollHeight;
         }
 
-        function fadeOutLine(id) {
-            setTimeout(function () {
-                var element = document.getElementById(id)
-                element.classList.add("faded-line");
 
-                if(!active)
-                    element.classList.add("inactive-line");
-            }, fadeTimeSeconds * 1000);
+        // Ouput
+        function printGModConsole(message) {
+            console.log("RUNLUA:print( \"" + message + "\" )")
         }
 
         window.onerror = function (message, source, lineno, colno, error) {
@@ -118,7 +189,41 @@
             printGModConsole(JSON.stringify(error));
         }
 
+        function sendMessage(message) {
+            console.log("RUNLUA:eChat.SendMessage( \"" + message + "\" )")
+        }
+
+
+        // Logic
+        function convert(input) {
+            return emojione.toImage(input);
+        }
+
+        function colourToRGBA(colour) {
+            return "rgba(" + colour.r + "," + colour.g + "," + colour.b + "," + colour.a + ")";
+        }
+
+        function fadeOutLine(id) {
+            setTimeout(function () {
+                var element = document.getElementById(id)
+                element.classList.add("faded-line");
+
+                if (!active)
+                    element.classList.add("inactive-line");
+            }, fadeTimeSeconds * 1000);
+        }
+
+        getInputBox()
+            .addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    sendMessage(getInputBox().value);
+                }
+            });
+
+
         scrollToBottom();
+        setTextEntryMode(selectedTextEntryMode);
     </script>
 </body>
 

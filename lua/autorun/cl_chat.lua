@@ -126,28 +126,19 @@ function eChat.buildBox()
 		elseif code == KEY_TAB then
 			// TODO: Keep this feature? Will it mess with player name and emoji completion
 
-			eChat.SelectedTextEntryMode = eChat.SelectedTextEntryMode + 1
-			if(eChat.SelectedTextEntryMode > TEXTENTRYMODE_CONSOLE) then
-				eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
+			local newMode = eChat.SelectedTextEntryMode + 1
+			if(newMode > TEXTENTRYMODE_CONSOLE) then
+				newMode = TEXTENTRYMODE_GLOBAL
 			end
+
+			SelectTextEntryMode(newMode);
 
 			timer.Simple(0.001, function() eChat.entry:RequestFocus() end)
 
 		elseif code == KEY_ENTER then
 			-- Replicate the client pressing enter
 			
-			if string.Trim( self:GetText() ) != "" then
-				if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then
-					LocalPlayer():ConCommand("say_team \"" .. (self:GetText() or "") .. "\"")
-				elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
-					LocalPlayer():ConCommand(self:GetText() or "")
-				else
-					LocalPlayer():ConCommand("say \"" .. self:GetText() .. "\"")
-				end
-			end
-
-			eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
-			eChat.hideBox()
+			eChat.SendMessage(self:GetText())
 		end
 	end
 
@@ -255,7 +246,7 @@ function eChat.showBox()
 	
 	-- MakePopup calls the input functions so we don't need to call those
 	eChat.frame:MakePopup()
-	eChat.entry:RequestFocus()
+	eChat.chatLog:RequestFocus()
 	
 	-- Make sure other addons know we are chatting
 	gamemode.Call("StartChat")
@@ -489,4 +480,29 @@ function UpdateFadeTime(durationInSeconds)
 		eChat.config.fadeTime = durationInSeconds;
 	end
 	eChat.chatLog:QueueJavascript("setFadeTime(" .. eChat.config.fadeTime .. ")")
+end
+
+function SelectTextEntryMode(textEntryMode)
+	eChat.SelectedTextEntryMode = textEntryMode
+	eChat.chatLog:QueueJavascript("setTextEntryMode('" .. eChat.SelectedTextEntryMode .. "')")
+end
+
+function eChat.SendMessage(message)
+	// TODO: Proper empty string check
+	if string.Trim( message ) != "" then
+
+		if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then
+			LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
+
+		elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
+			LocalPlayer():ConCommand(message or "")
+
+		else
+			LocalPlayer():ConCommand("say \"" .. message .. "\"")
+
+		end
+	end
+
+	SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
+	eChat.hideBox()
 end

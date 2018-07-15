@@ -26,6 +26,8 @@ TODO:
 * Replace text entry with HTML version
     * Will need to call out to Lua
         * eChat.entry.OnTextChanged
+    * Maybe fix rendering of emojis in textbox
+* Fix player joins not showing
 * Tab auto-complete emoji
     * Show selectable suggestions (like discord)
 * Tab auto-complete player name
@@ -43,6 +45,7 @@ TODO:
     * How will this hook into other chat systems?
         * Tags etc
     * Update emojione version
+    * Use hud_saytext_time
 * Tidy up
     * Sort out all the logic which builds the text box if it doesn't exist already
         * Just update the state and rely on the text box using the current state when it is drawn
@@ -52,3 +55,11 @@ TODO:
         * GUI event callbacks
     * Rename that oldPaint2 stuff
     * better logic to detect when a timestamp should be added (always?)
+
+
+Testing HTML
+```javascript
+addOutput("[{\"colour\":{\"r\":130.0,\"b\":130.0,\"a\":255.0,\"g\":130.0},\"text\":\"[12:30:22] \"},{\"colour\":{\"r\":0.0,\"b\":0.0,\"a\":255.0,\"g\":200.0},\"text\":\"Badger\"},{\"colour\":{\"r\":0.0,\"b\":255.0,\"a\":255.0,\"g\":255.0},\"text\":\": lenny2\"}]")
+
+setActive()
+```
