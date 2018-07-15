@@ -12,7 +12,7 @@ TEXTENTRYMODE_TEAM = 2
 TEXTENTRYMODE_CONSOLE = 3
 
 eChat = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/adf2ac7ea3e12de62e6ca368fa16cad8b80b7ab0/emojichat.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/2c90155672f79d9e8671b8490a24251c31658583/emojichat.html",
 	//htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time(),
 	SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 }
@@ -296,7 +296,7 @@ hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	end
 	
 	if type != "chat" then
-		RenderTextLine({ { text = text.."\n", colour = Color(0, 128, 255, 255) } })
+		RenderTextLine({ { text = text.."\n", colour = Color(151, 211, 255, 255) } })
 		return true
 	end
 end)
