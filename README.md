@@ -23,7 +23,11 @@ General chatbox stuff:
 
 
 TODO: 
-* Maybe fix rendering of emojis in textbox
+* Font looks awful over bright lights
+* Make entity messages a blue colour
+* Try to use local version of html file instead of hosted one
+* Fix last words in TTT
+* Maybe fix rendering of emojis in input box
 * Fix player joins not showing
 * Intercept ` key presses and prevent console from showing up
 * Make it so the UI doesn't jitter when escape is pressed
@@ -32,9 +36,6 @@ TODO:
 * Tab auto-complete player name
     * Maybe try to fix the "space in name" problem
     * And non-typeable characters problem
-* Font looks awful over bright lights
-* Make entity messages a blue colour
-* Try to use local version of html file instead of hosted one
 * Future
     * Support for server-custom emojis?
     * Allow styling tags?
