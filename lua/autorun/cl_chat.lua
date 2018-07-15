@@ -126,7 +126,7 @@ function eChat.hideBox()
 	gui.EnableScreenClicker( false )
 	
 	-- We are done chatting
-	gamemode.Call("FinishChat")
+	hook.Run("FinishChat")
 end
 
 --// Shows the chat box
@@ -150,7 +150,7 @@ function eChat.showBox()
 	eChat.chatLog:RequestFocus()
 	
 	-- Make sure other addons know we are chatting
-	gamemode.Call("StartChat")
+	hook.Run("StartChat")
 end
 
 --// Opens the settings panel
@@ -404,10 +404,11 @@ function eChat.SendMessage(message)
 
 	SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
 	eChat.hideBox()
+	eChat.InputChange("")
 end
 
 function eChat.InputChange(newValue)
-	gamemode.Call( "ChatTextChanged", newValue )
+	hook.Run("ChatTextChanged", newValue)
 end
 
 function eChat.CloseChat()

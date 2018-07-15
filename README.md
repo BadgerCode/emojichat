@@ -26,7 +26,6 @@ TODO:
 * Font looks awful over bright lights
 * Make entity messages a blue colour
 * Try to use local version of html file instead of hosted one
-* Fix last words in TTT
 * Maybe fix rendering of emojis in input box
 * Fix player joins not showing
 * Intercept ` key presses and prevent console from showing up
