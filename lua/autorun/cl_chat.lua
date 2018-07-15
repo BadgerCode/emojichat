@@ -7,8 +7,13 @@ if SERVER then
 	return
 end
 
+TEXTENTRYMODE_GLOBAL = 1
+TEXTENTRYMODE_TEAM = 2
+TEXTENTRYMODE_CONSOLE = 3
+
 eChat = {
-	html = {}
+	html = {},
+	SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 }
 
 eChat.config = {
@@ -120,13 +125,12 @@ function eChat.buildBox()
 			gui.HideGameUI()
 
 		elseif code == KEY_TAB then
-			
-			eChat.TypeSelector = (eChat.TypeSelector and eChat.TypeSelector + 1) or 1
-			
-			if eChat.TypeSelector > 3 then eChat.TypeSelector = 1 end
-			if eChat.TypeSelector < 1 then eChat.TypeSelector = 3 end
-			
-			eChat.ChatType = types[eChat.TypeSelector]
+			// TODO: Keep this feature? Will it mess with player name and emoji completion
+
+			eChat.SelectedTextEntryMode = eChat.SelectedTextEntryMode + 1
+			if(eChat.SelectedTextEntryMode > TEXTENTRYMODE_CONSOLE) then
+				eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
+			end
 
 			timer.Simple(0.001, function() eChat.entry:RequestFocus() end)
 
@@ -134,16 +138,16 @@ function eChat.buildBox()
 			-- Replicate the client pressing enter
 			
 			if string.Trim( self:GetText() ) != "" then
-				if eChat.ChatType == types[2] then
+				if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then
 					LocalPlayer():ConCommand("say_team \"" .. (self:GetText() or "") .. "\"")
-				elseif eChat.ChatType == types[3] then
+				elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
 					LocalPlayer():ConCommand(self:GetText() or "")
 				else
 					LocalPlayer():ConCommand("say \"" .. self:GetText() .. "\"")
 				end
 			end
 
-			eChat.TypeSelector = 1
+			eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 			eChat.hideBox()
 		end
 	end
@@ -199,9 +203,9 @@ function eChat.buildBox()
 		local types = {"", "teamchat", "console"}
 		local s = {}
 
-		if eChat.ChatType == types[2] then 
+		if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then 
 			text = "Say (TEAM) :"	
-		elseif eChat.ChatType == types[3] then
+		elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
 			text = "Console :"
 		else
 			text = "Say :"
@@ -462,9 +466,9 @@ hook.Remove("PlayerBindPress", "echat_hijackbind")
 hook.Add("PlayerBindPress", "echat_hijackbind", function(ply, bind, pressed)
 	if string.sub( bind, 1, 11 ) == "messagemode" then
 		if bind == "messagemode2" then 
-			eChat.ChatType = "teamchat"
+			eChat.SelectedTextEntryMode = TEXTENTRYMODE_TEAM
 		else
-			eChat.ChatType = ""
+			eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 		end
 		
 		if IsValid( eChat.frame ) then
