@@ -22,7 +22,7 @@ General chatbox stuff:
 * https://github.com/Exho1/eChat/blob/master/lua/autorun/cl_chat.lua
 
 
-TODO: 
+TODO:
 * Try to use local version of html file instead of hosted one
 * Maybe fix rendering of emojis in input box
 * Fix player joins not showing
