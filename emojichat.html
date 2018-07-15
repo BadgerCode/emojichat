@@ -13,10 +13,18 @@
             /*background-color: rgba(0, 0, 0, 0.5);*/
             background-color: transparent;
             color: rgb(230, 230, 230);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
         }
-        .emoji-fix {
-            font-family: apple color emoji, segoe ui emoji, notocoloremoji, segoe ui symbol, android emoji, emojisymbols, emojione mozilla;
-            font-weight: 400;
+        #output {
+            overflow: hidden;
+            height: 100%;
         }
     </style>
 </head>
@@ -24,6 +32,14 @@
 <body>
     <div id="output"></div>
     <script>
+        function setActive(){
+           document.getElementById("output").style["overflow-y"] = "scroll";
+        }
+
+        function setInactive(){
+           document.getElementById("output").style["overflow-y"] = "hidden";
+        }
+
         function printGModConsole(message) {
             console.log( "RUNLUA:print( \"" + message + "\" )" )
         }
@@ -52,7 +68,8 @@
         }
 
         function scrollToBottom(){
-            window.scrollTo(0,document.body.scrollHeight);
+            var element = document.getElementById("output");
+            element.scrollTop = element.scrollHeight;
         }
 
         window.onerror = function(message, source, lineno, colno, error) {

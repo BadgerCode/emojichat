@@ -47,7 +47,6 @@ if not GAMEMODE then
 		include("autorun/cl_chat.lua")
 		print("GM init")
 		eChat.buildBox()
-		eChat.buildHTMLRenderer()
 	end)
 	return
 end
@@ -152,39 +151,15 @@ function eChat.buildBox()
 		end
 	end
 
-	// TODO
-	eChat.chatLog = vgui.Create("RichText", eChat.frame) 
-	//eChat.chatLog = vgui.Create( "DHTML" , eChat.frame )
+	eChat.chatLog = vgui.Create( "DHTML" , eChat.frame )
 	eChat.chatLog:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - 60 )
 	eChat.chatLog:SetPos( 5, 30 )
 	eChat.chatLog.Paint = function( self, w, h )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
 	end
-	eChat.chatLog.Think = function( self )
-		if eChat.lastMessage then
-			if CurTime() - eChat.lastMessage > eChat.config.fadeTime then
-				self:SetVisible( false )
-			else
-				self:SetVisible( true )
-			end
-		end
-		self:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - eChat.entry:GetTall() - serverName:GetTall() - 20 )
-		settings:SetPos( eChat.frame:GetWide() - settings:GetWide(), 0 )
-	end
-	// TODO: Disable
-	eChat.chatLog.PerformLayout = function( self )
-		self:SetFontInternal("eChat_18")
-		self:SetFGColor( color_white )
-	end
 	eChat.oldPaint2 = eChat.chatLog.Paint
-
-	// TODO: Enable
-	/*
-	eChat.chatLog:Dock( FILL )
 	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
 	eChat.chatLog:SetAllowLua( true ) // TODO: Disable
-	*/
-
 	
 	local text = "Say :"
 
@@ -235,9 +210,8 @@ function eChat.hideBox()
 	eChat.frame.Paint = function() end
 	eChat.chatLog.Paint = function() end
 	
-	eChat.chatLog:SetVerticalScrollbarEnabled( false )
-	eChat.chatLog:GotoTextEnd() // TODO: Disable
-	// TODO: Scroll to end
+	SetTextOutputInactive()
+	ScrollToTextEnd()
 	
 	eChat.lastMessage = eChat.lastMessage or CurTime() - eChat.config.fadeTime
 	
@@ -270,7 +244,7 @@ function eChat.showBox()
 	eChat.frame.Paint = eChat.oldPaint
 	eChat.chatLog.Paint = eChat.oldPaint2
 	
-	eChat.chatLog:SetVerticalScrollbarEnabled( true )
+	SetTextOutputActive()
 	eChat.lastMessage = nil
 	
 	-- Show any hidden children
@@ -386,16 +360,6 @@ end
 
 local oldAddText = chat.AddText
 
-function TextComponent(text, colour)
-	local component = { text = text, colour = colour }
-	return component
-end
-
-function RenderTextLine(textComponents)
-	local json = string.JavascriptSafe(util.TableToJSON(textComponents))
-	eChat.html.Renderer:QueueJavascript("addOutput('" .. json  .. "')")
-end
-
 --// Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
 	if not eChat.chatLog then
@@ -406,46 +370,32 @@ function chat.AddText(...)
 	local defaultTextColour = Color(255, 255, 255, 255)
 	local activeColour = Color(255, 255, 255, 255) // TODO: Default chat colour
 	local textComponents = {}
-	
-	//eChat.html.Renderer:QueueJavascript("addOutput('badger', 'I come from LUA')")
 
 	// TODO: Delete all eChat.chatLog lines
 	-- Iterate through the strings and colors
 	for _, obj in pairs( {...} ) do
 		if type(obj) == "table" then
-			eChat.chatLog:InsertColorChange( obj.r, obj.g, obj.b, obj.a )
 			activeColour = obj
 		elseif type(obj) == "string"  then
-			eChat.chatLog:AppendText( obj )
 			table.insert( textComponents, TextComponent(obj, activeColour))
 		elseif obj:IsPlayer() then
 			local ply = obj
 			
-			if eChat.config.timeStamps then // TODO: Maybe better logic to detect when a timestamp is needed
-				eChat.chatLog:InsertColorChange( 130, 130, 130, 255 )
-				eChat.chatLog:AppendText( "["..os.date("%X").."] ")
-
+			if eChat.config.timeStamps then
 				table.insert( textComponents, TextComponent("["..os.date("%X").."] ", Color(130, 130, 130, 255)))
 			end
 
 			local col = GAMEMODE:GetTeamColor( obj )
-			eChat.chatLog:InsertColorChange( col.r, col.g, col.b, 255 )
-			eChat.chatLog:AppendText( obj:Nick() )
-
 			table.insert( textComponents, TextComponent(ply:Nick(), Color(col.r, col.g, col.b, 255)))
 		elseif IsEntity(obj) then
-			// TODO: Maybe make this a blue colour
 			table.insert( textComponents, TextComponent(obj:GetClass(), defaultTextColour))
 		end
 	end
 
 	RenderTextLine(textComponents)
 
-	eChat.chatLog:AppendText("\n")
-	
 	eChat.chatLog:SetVisible( true )
 	eChat.lastMessage = CurTime()
-	eChat.chatLog:InsertColorChange( 255, 255, 255, 255 )
 end
 
 --// Write any server notifications
@@ -457,8 +407,6 @@ hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	end
 	
 	if type != "chat" then
-		eChat.chatLog:InsertColorChange( 0, 128, 255, 255 )
-		eChat.chatLog:AppendText( text.."\n" )
 		eChat.chatLog:SetVisible( true )
 		eChat.lastMessage = CurTime()
 
@@ -518,24 +466,24 @@ function chat.Close(...)
 end
 
 
-function eChat.buildHTMLRenderer()
-	print("Building HTML renderer")
-	eChat.html.Frame = vgui.Create( "DFrame" )
-	eChat.html.Frame:SetSize( 300, 200 )
-	eChat.html.Frame:SetTitle("")
-	--frame:ShowCloseButton( false )
-	eChat.html.Frame:SetVisible( true )
-	eChat.html.Frame:SetDraggable( true )
-	eChat.html.Frame:Center()
-	eChat.html.Frame.Paint = function( self, w, h )
-		eChat.blur( self, 10, 20, 255 )
-		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
-		
-		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
-	end
-	--Fill the form with a html page
-	eChat.html.Renderer = vgui.Create( "DHTML" , eChat.html.Frame )
-	eChat.html.Renderer:Dock( FILL )
-	eChat.html.Renderer:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
-	eChat.html.Renderer:SetAllowLua( true )
+function TextComponent(text, colour)
+	local component = { text = text, colour = colour }
+	return component
+end
+
+function RenderTextLine(textComponents)
+	local json = string.JavascriptSafe(util.TableToJSON(textComponents))
+	eChat.chatLog:QueueJavascript("addOutput('" .. json  .. "')")
+end
+
+function SetTextOutputActive()
+	eChat.chatLog:QueueJavascript("setActive()")
+end
+
+function SetTextOutputInactive()
+	eChat.chatLog:QueueJavascript("setInactive()")
+end
+
+function ScrollToTextEnd()
+	eChat.chatLog:QueueJavascript("scrollToBottom()")
 end

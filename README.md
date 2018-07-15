@@ -24,10 +24,7 @@ General chatbox stuff:
 
 TODO: 
 * Integrate HTML renderer into chat box
-    * Make it hide/show the same as the other one
     * Add basic fade out
-    * Hide scrollbars when not active
-    * DELETE old one
 * Replace text entry with HTML version
     * Will need to call out to Lua
         * eChat.entry.OnTextChanged
@@ -40,10 +37,12 @@ TODO:
 * Make fade-out not wack (gradual, faded out text stays faded out not this all or nothing BS)
 * Make double quotes work in this version
 * Font looks awful over bright lights
+* Make entity messages a blue colour
 * Future
     * Support for server-custom emojis?
     * Allow styling tags?
         * Could allow some basic markdown
+    * Maybe show history before player joined?
 * Tidy up
     * Sort out all the logic which builds the text box if it doesn't exist already
         * Just update the state and rely on the text box using the current state when it is drawn
@@ -51,3 +50,5 @@ TODO:
         * Default chat/hooks override
         * GUI setup
         * GUI event callbacks
+    * Rename that oldPaint2 stuff
+    * better logic to detect when a timestamp should be added (always?)
