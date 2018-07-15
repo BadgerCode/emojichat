@@ -12,7 +12,8 @@ TEXTENTRYMODE_TEAM = 2
 TEXTENTRYMODE_CONSOLE = 3
 
 eChat = {
-	html = {},
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/EmojiChat/b44de541ade5117a8b770c99974c78f23827ce35/emojichat.html",
+	//htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()",
 	SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 }
 
@@ -94,7 +95,7 @@ function eChat.buildBox()
 	end
 	eChat.oldPaint2 = eChat.chatLog.Paint
 	eChat.chatLog:SetVisible( true )
-	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
+	eChat.chatLog:OpenURL(eChat.htmlURL)
 	eChat.chatLog:SetAllowLua( true )
 	UpdateFadeTime()
 	
