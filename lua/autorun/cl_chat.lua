@@ -27,6 +27,22 @@ https://github.com/Exho1/eChat/blob/master/lua/autorun/cl_chat.lua
 
 */
 
+/* TODO: 
+	* Actually render text in the HTML version
+		* Add JS functions
+			* Add lines of text
+			* Scroll to bottom
+			* Toggle vertical scrollbar (maybe disable the lua code for this)
+	* Tab auto-complete emoji
+		* Show selectable suggestions (like discord)
+	* Tab auto-complete player name
+		* Maybe try to fix the "space in name" problem
+		* And non-typeable characters problem
+	* Make sure basics work- ctrl+a/c/v/x
+	* Make fade-out not wack (gradual, faded out text stays faded out not this all or nothing BS)
+	* Make double quotes work in this version
+*/
+
 
 ----// eChat //----
 -- Author: Exho (obviously), Tomelyr, LuaTenshi
@@ -37,7 +53,9 @@ if SERVER then
 	return
 end
 
-eChat = {}
+eChat = {
+	html = {}
+}
 
 eChat.config = {
 	timeStamps = true,
@@ -68,13 +86,16 @@ if not GAMEMODE then
 	hook.Remove("Initialize", "echat_init")
 	hook.Add("Initialize", "echat_init", function()
 		include("autorun/cl_chat.lua")
+		print("GM init")
 		eChat.buildBox()
+		eChat.buildHTMLRenderer()
 	end)
 	return
 end
 
 --// Builds the chatbox but doesn't display it
 function eChat.buildBox()
+	print("Running buildbox")
 	eChat.frame = vgui.Create("DFrame")
 	eChat.frame:SetSize( ScrW()*0.375, ScrH()*0.25 )
 	eChat.frame:SetTitle("")
@@ -173,7 +194,9 @@ function eChat.buildBox()
 		end
 	end
 
+	// TODO
 	eChat.chatLog = vgui.Create("RichText", eChat.frame) 
+	//eChat.chatLog = vgui.Create( "DHTML" , eChat.frame )
 	eChat.chatLog:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - 60 )
 	eChat.chatLog:SetPos( 5, 30 )
 	eChat.chatLog.Paint = function( self, w, h )
@@ -190,11 +213,19 @@ function eChat.buildBox()
 		self:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - eChat.entry:GetTall() - serverName:GetTall() - 20 )
 		settings:SetPos( eChat.frame:GetWide() - settings:GetWide(), 0 )
 	end
+	// TODO: Disable
 	eChat.chatLog.PerformLayout = function( self )
 		self:SetFontInternal("eChat_18")
 		self:SetFGColor( color_white )
 	end
 	eChat.oldPaint2 = eChat.chatLog.Paint
+
+	// TODO: Enable
+	/*
+	eChat.chatLog:Dock( FILL )
+	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
+	eChat.chatLog:SetAllowLua( true ) // TODO: Disable*/
+
 	
 	local text = "Say :"
 
@@ -246,7 +277,8 @@ function eChat.hideBox()
 	eChat.chatLog.Paint = function() end
 	
 	eChat.chatLog:SetVerticalScrollbarEnabled( false )
-	eChat.chatLog:GotoTextEnd()
+	eChat.chatLog:GotoTextEnd() // TODO: Disable
+	// TODO: Scroll to end
 	
 	eChat.lastMessage = eChat.lastMessage or CurTime() - eChat.config.fadeTime
 	
@@ -353,21 +385,7 @@ function eChat.openSettings()
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
 		derma.SkinHook( "Paint", "TextEntry", self, w, h )
 	end
-	
-	--[[local checkbox2 = vgui.Create("DCheckBox", eChat.frameS ) 
-	checkbox2:SetPos(label2:GetWide() + 15, 72)
-	checkbox2:SetValue( eChat.config.seeChatTags )
-	
-	local label3 = vgui.Create("DLabel", eChat.frameS)
-	label3:SetText( "Use chat tags: " )
-	label3:SetFont( "eChat_18")
-	label3:SizeToContents()
-	label3:SetPos( 10, 100 )
-	
-	local checkbox3 = vgui.Create("DCheckBox", eChat.frameS ) 
-	checkbox3:SetPos(label3:GetWide() + 15, 102)
-	checkbox3:SetValue( eChat.config.useChatTag )]]
-	
+
 	local save = vgui.Create("DButton", eChat.frameS)
 	save:SetText("Save")
 	save:SetFont( "eChat_18")
@@ -411,12 +429,17 @@ local oldAddText = chat.AddText
 
 --// Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
+	// TODO: Call javascript to render a line of text in the HTML view
+	// Also understand wtf this is doing
 	if not eChat.chatLog then
+		print("Add text build box")
 		eChat.buildBox()
 	end
 	
 	local msg = {}
 	
+	//eChat.html.Renderer:QueueJavascript("addOutput('badger', 'I come from LUA')")
+
 	-- Iterate through the strings and colors
 	for _, obj in pairs( {...} ) do
 		if type(obj) == "table" then
@@ -444,8 +467,15 @@ function chat.AddText(...)
 			eChat.chatLog:InsertColorChange( col.r, col.g, col.b, 255 )
 			eChat.chatLog:AppendText( obj:Nick() )
 			table.insert( msg, obj:Nick() )
+		elseif IsEntity(obj) then
+			table.insert( msg, obj:GetClass() )
 		end
 	end
+	// TODO: What about non-player entities that should be to-string'd?
+	// print entity:GetClass(), maybe in some kind of blue colour
+
+	eChat.html.Renderer:QueueJavascript("addOutput('" .. util.TableToJSON(msg)  .. "')")
+
 	eChat.chatLog:AppendText("\n")
 	
 	eChat.chatLog:SetVisible( true )
@@ -458,10 +488,12 @@ end
 hook.Remove( "ChatText", "echat_joinleave")
 hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	if not eChat.chatLog then
+		print("Chat text build box")
 		eChat.buildBox()
 	end
 	
 	if type != "chat" then
+		// TODO: Call JS to render this
 		eChat.chatLog:InsertColorChange( 0, 128, 255, 255 )
 		eChat.chatLog:AppendText( text.."\n" )
 		eChat.chatLog:SetVisible( true )
@@ -483,6 +515,7 @@ hook.Add("PlayerBindPress", "echat_hijackbind", function(ply, bind, pressed)
 		if IsValid( eChat.frame ) then
 			eChat.showBox()
 		else
+			print("Player bind press build box")
 			eChat.buildBox()
 			eChat.showBox()
 		end
@@ -513,38 +546,38 @@ function chat.Close(...)
 	if IsValid( eChat.frame ) then 
 		eChat.hideBox(...)
 	else
+		print("Chat close build box")
 		eChat.buildBox()
 		eChat.showBox()
 	end
 end
 
 
-
-concommand.Remove("emojichat")
-concommand.Add( "emojichat", function( ply, cmd, args )
-	local frame = vgui.Create( "DFrame" )
-	frame:SetSize( 300, 200 )
-	frame:SetTitle("")
+function eChat.buildHTMLRenderer()
+	print("Building HTML renderer")
+	eChat.html.Frame = vgui.Create( "DFrame" )
+	eChat.html.Frame:SetSize( 300, 200 )
+	eChat.html.Frame:SetTitle("")
 	--frame:ShowCloseButton( false )
-	frame:SetVisible( true )
-	frame:SetDraggable( true )
-	frame:Center()
-	frame.Paint = function( self, w, h )
+	eChat.html.Frame:SetVisible( true )
+	eChat.html.Frame:SetDraggable( true )
+	eChat.html.Frame:Center()
+	eChat.html.Frame.Paint = function( self, w, h )
 		eChat.blur( self, 10, 20, 255 )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
 		
 		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
 	end
 	--Fill the form with a html page
-	local html = vgui.Create( "DHTML" , frame )
-	html:Dock( FILL )
-	html:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
-	/*html:SetHTML( [[
-	]] )*/
+	eChat.html.Renderer = vgui.Create( "DHTML" , eChat.html.Frame )
+	eChat.html.Renderer:Dock( FILL )
+	eChat.html.Renderer:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
+	eChat.html.Renderer:SetAllowLua( true )
+end
 
-	--Enable the webpage to call lua code
-	html:SetAllowLua( true )
 
-	frame:MakePopup()
+// TODO: Remove
+concommand.Remove("emojichat")
+concommand.Add( "emojichat", function( ply, cmd, args )
+	eChat.html.Frame:MakePopup()
 end )
-

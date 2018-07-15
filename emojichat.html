@@ -29,6 +29,16 @@
             return emojione.toImage(input);
         }
 
+        function addOutput(message) {
+            var formattedLine = convert(message) + "<br>";
+            document.getElementById("output").innerHTML += formattedLine;
+            scrollToBottom();
+        }
+
+        function scrollToBottom(){
+            window.scrollTo(0,document.body.scrollHeight);
+        }
+
         window.onerror = function(message, source, lineno, colno, error) {
             printGModConsole("Error- '" + message + "'" )
         }
@@ -40,11 +50,15 @@
     <p>Alt Fox: '<i class="em em-fox_face"></i>'</p>
     <p>Image Fox: <img src="https://twemoji.maxcdn.com/2/72x72/1f98a.png"/></p>
     <p id="output-fox"></p>
+    <div id="output"></div>
+    <button onclick='addOutput("badger: test message")'>AddLine</button>
     <input type='submit' onclick='printGModConsole("This is called in Lua context")' />
 
     <script>
         var element = document.getElementById("output-fox");
         element.innerHTML = convert("EmojiOne Fox: '🦊'");
+
+        scrollToBottom();
     </script>
 </body>
 
