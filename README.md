@@ -23,7 +23,6 @@ General chatbox stuff:
 
 
 TODO: 
-* Font looks awful over bright lights
 * Make entity messages a blue colour
 * Try to use local version of html file instead of hosted one
 * Maybe fix rendering of emojis in input box
