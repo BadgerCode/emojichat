@@ -88,6 +88,7 @@
         var active = false;
         var fadeTimeSeconds = 5;
         var selectedTextEntryMode = TextEntryMode.Global;
+        var currentInput = "";
 
 
         // DOM
@@ -131,6 +132,8 @@
 
         function setActive() {
             active = true;
+            currentInput = "";
+
             setTextEntryMode(selectedTextEntryMode);
             getOutputElement().style["overflow-y"] = "scroll";
             getInputWrapper().style["display"] = "block";
@@ -197,6 +200,10 @@
             console.log("RUNLUA:eChat.InputChange( \"" + newValue + "\" )")
         }
 
+        function closeChat() {
+            console.log("RUNLUA:eChat.CloseChat()")
+        }
+
 
         // Logic
         function convert(input) {
@@ -219,16 +226,30 @@
 
         getInputBox()
             .addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
+                var key = event.which || event.keyCode || 0;
+                if (key === 13) {
+                    event.preventDefault();
                     sendMessage(getInputBox().value);
                 }
             });
 
         getInputBox()
+            .addEventListener("keydown", function (event) {
+                var key = event.which || event.keyCode || 0;
+                if (key === 27) {
+                    event.preventDefault();
+                    closeChat();
+                }
+            });
+
+        getInputBox()
             .addEventListener("input", function (event) {
-                event.preventDefault();
-                inputChangeCallback(getInputBox().value);
+                var newInput = getInputBox().value;
+
+                if (active) {
+                    currentInput = newInput;
+                    inputChangeCallback(currentInput);
+                }
             });
 
 

@@ -109,19 +109,11 @@ function eChat.buildBox()
 		derma.SkinHook( "Paint", "TextEntry", self, w, h )
 	end
 
-	eChat.entry.OnTextChanged = function( self )
-		if self and self.GetText then 
-			gamemode.Call( "ChatTextChanged", self:GetText() or "" )
-		end
-	end
-
 	eChat.entry.OnKeyCodeTyped = function( self, code )
 		local types = {"", "teamchat", "console"}
 
 		if code == KEY_ESCAPE then
-
-			eChat.hideBox()
-			gui.HideGameUI()
+			eChat.CloseChat()
 
 		elseif code == KEY_TAB then
 			// TODO: Keep this feature? Will it mess with player name and emoji completion
@@ -225,7 +217,6 @@ function eChat.hideBox()
 	
 	-- Clear the text entry
 	eChat.entry:SetText( "" )
-	gamemode.Call( "ChatTextChanged", "" )
 end
 
 --// Shows the chat box
@@ -510,3 +501,12 @@ end
 function eChat.InputChange(newValue)
 	gamemode.Call( "ChatTextChanged", newValue )
 end
+
+function eChat.CloseChat()
+	eChat.hideBox()
+	gui.HideGameUI()
+end
+
+hook.Add("ChatTextChanged", "testmycallback", function(newValue)
+	print("New value " .. newValue)
+end)
