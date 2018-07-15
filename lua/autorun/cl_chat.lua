@@ -533,10 +533,3 @@ function eChat.buildHTMLRenderer()
 	eChat.html.Renderer:OpenURL("http://localhost/~michael/emojichat/emojichat.html")
 	eChat.html.Renderer:SetAllowLua( true )
 end
-
-
-// TODO: Remove
-concommand.Remove("emojichat")
-concommand.Add( "emojichat", function( ply, cmd, args )
-	eChat.html.Frame:MakePopup()
-end )
