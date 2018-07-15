@@ -68,7 +68,7 @@
     </style>
 </head>
 
-<body>
+<body id="body">
     <div id="output"></div>
     <div id="input">
         <span id="input-prompt"></span>
@@ -77,6 +77,12 @@
         </div>
     </div>
     <script>
+        var Keys = {
+            Escape: 27,
+            Tab: 9,
+            Enter: 13
+        };
+
         var TextEntryMode = {
             Global: 1,
             Team: 2,
@@ -155,12 +161,15 @@
             getOutputElement().style["overflow-y"] = "hidden";
             getInputWrapper().style["display"] = "none";
             getInputBox().value = "";
+            clearSelection();
 
             var lines = document.getElementsByClassName("faded-line");
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i];
                 line.classList.add("inactive-line");
             }
+
+            scrollToBottom();
         }
 
         function addOutput(rawTextComponents) {
@@ -178,10 +187,6 @@
             getOutputElement().innerHTML += "<span id='" + id + "' class='line'>" + formattedLine + "</span><br>";
             scrollToBottom();
             fadeOutLine(id);
-        }
-
-        function scrollToBottom() {
-            getOutputElement().scrollTop = getOutputElement().scrollHeight;
         }
 
 
@@ -223,10 +228,19 @@
         }
 
         function makeStringLuaSafe(string) {
-            if(string === null || typeof(string) === "undefined")
+            if (string === null || typeof (string) === "undefined")
                 return string;
 
             return JSON.stringify(string);
+        }
+
+        function scrollToBottom() {
+            getOutputElement().scrollTop = getOutputElement().scrollHeight;
+        }
+
+        function clearSelection() {
+            if (window.getSelection) { window.getSelection().removeAllRanges(); }
+            else if (document.selection) { document.selection.empty(); }
         }
 
         function fadeOutLine(id) {
@@ -242,20 +256,25 @@
         getInputBox()
             .addEventListener("keyup", function (event) {
                 var key = event.which || event.keyCode || 0;
-                if (key === 13) {
+                if (key === Keys.Enter) {
                     event.preventDefault();
                     sendMessage(getInputBox().value);
                 }
             });
 
-        getInputBox()
+
+        document.getElementById("body")
             .addEventListener("keydown", function (event) {
                 var key = event.which || event.keyCode || 0;
-                if (key === 27) {
+                if (key === Keys.Escape) {
                     event.preventDefault();
                     closeChat();
                 }
-                else if(key === 9) {
+            });
+        getInputBox()
+            .addEventListener("keydown", function (event) {
+                var key = event.which || event.keyCode || 0;
+                if (key === Keys.Tab) {
                     event.preventDefault();
                     changeTextEntryMode();
                 }

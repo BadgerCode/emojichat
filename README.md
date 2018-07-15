@@ -43,13 +43,10 @@ TODO:
     * Update emojione version
     * Use hud_saytext_time
 * Tidy up
-    * Sort out all the logic which builds the text box if it doesn't exist already
-        * Just update the state and rely on the text box using the current state when it is drawn
     * Separate modules
         * Default chat/hooks override
         * GUI setup
         * GUI event callbacks
-    * Rename that oldPaint2 stuff
     * better logic to detect when a timestamp should be added (always?)
 
 
