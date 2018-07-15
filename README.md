@@ -23,19 +23,15 @@ General chatbox stuff:
 
 
 TODO: 
-* Replace text entry with HTML version
-    * Will need to call out to Lua
-        * eChat.entry.OnTextChanged
-    * Maybe fix rendering of emojis in textbox
+* Maybe fix rendering of emojis in textbox
 * Fix player joins not showing
 * Intercept ` key presses and prevent console from showing up
+* Make it so the UI doesn't jitter when escape is pressed
 * Tab auto-complete emoji
     * Show selectable suggestions (like discord)
 * Tab auto-complete player name
     * Maybe try to fix the "space in name" problem
     * And non-typeable characters problem
-* Make sure basics work- ctrl+a/c/v/x
-* Make double quotes work in this version
 * Font looks awful over bright lights
 * Make entity messages a blue colour
 * Future

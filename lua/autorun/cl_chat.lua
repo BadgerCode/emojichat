@@ -274,7 +274,7 @@ function chat.AddText(...)
 				table.insert( textComponents, TextComponent("["..os.date("%X").."] ", Color(130, 130, 130, 255)))
 			end
 
-			local col = GAMEMODE:GetTeamColor( obj )
+			local col = GAMEMODE:GetTeamColor( ply )
 			table.insert( textComponents, TextComponent(ply:Nick(), Color(col.r, col.g, col.b, 255)))
 		elseif IsEntity(obj) then
 			table.insert( textComponents, TextComponent(obj:GetClass(), defaultTextColour))
@@ -282,6 +282,8 @@ function chat.AddText(...)
 	end
 
 	RenderTextLine(textComponents)
+
+	oldAddText(...)
 end
 
 --// Write any server notifications

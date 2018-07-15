@@ -183,21 +183,21 @@
 
         // Ouput
         function printGModConsole(message) {
-            console.log("RUNLUA:print( \"" + message + "\" )")
+            console.log("RUNLUA:print( " + makeStringLuaSafe(message) + " )")
         }
 
         window.onerror = function (message, source, lineno, colno, error) {
             // TODO: Gmod already prints this
             printGModConsole("Error- '" + message + "' " + source + ", " + lineno + ' (' + colno + ') ')
-            printGModConsole(JSON.stringify(error));
+            printGModConsole(error);
         }
 
         function sendMessage(message) {
-            console.log("RUNLUA:eChat.SendMessage( \"" + message + "\" )")
+            console.log("RUNLUA:eChat.SendMessage( " + makeStringLuaSafe(message) + " )")
         }
 
         function inputChangeCallback(newValue) {
-            console.log("RUNLUA:eChat.InputChange( \"" + newValue + "\" )")
+            console.log("RUNLUA:eChat.InputChange( " + makeStringLuaSafe(newValue) + " )")
         }
 
         function closeChat() {
@@ -216,6 +216,13 @@
 
         function colourToRGBA(colour) {
             return "rgba(" + colour.r + "," + colour.g + "," + colour.b + "," + colour.a + ")";
+        }
+
+        function makeStringLuaSafe(string) {
+            if(string === null || typeof(string) === "undefined")
+                return string;
+
+            return JSON.stringify(string);
         }
 
         function fadeOutLine(id) {
