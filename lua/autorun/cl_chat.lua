@@ -31,15 +31,6 @@ surface.CreateFont( "eChat_18", {
 	extended = true,
 } )
 
-surface.CreateFont( "eChat_16", {
-	font = "Roboto Lt",
-	size = 16,
-	weight = 500,
-	antialias = true,
-	shadow = true,
-	extended = true,
-} )
-
 --// Prevents errors if the script runs too early, which it will
 if not GAMEMODE then
 	hook.Remove("Initialize", "echat_init")
@@ -94,87 +85,18 @@ function eChat.buildBox()
 	settings.DoClick = function( self )
 		eChat.openSettings()
 	end
-	
-	eChat.entry = vgui.Create("DTextEntry", eChat.frame) 
-	eChat.entry:SetSize( eChat.frame:GetWide() - 50, 20 )
-	eChat.entry:SetTextColor( color_white )
-	eChat.entry:SetFont("eChat_18")
-	eChat.entry:SetDrawBorder( false )
-	eChat.entry:SetDrawBackground( false )
-	eChat.entry:SetCursorColor( color_white )
-	eChat.entry:SetHighlightColor( Color(52, 152, 219) )
-	eChat.entry:SetPos( 45, eChat.frame:GetTall() - eChat.entry:GetTall() - 5 )
-	eChat.entry.Paint = function( self, w, h )
-		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
-		derma.SkinHook( "Paint", "TextEntry", self, w, h )
-	end
-
-	eChat.entry.OnKeyCodeTyped = function( self, code )
-		if code == KEY_ESCAPE then
-			eChat.CloseChat()
-
-		elseif code == KEY_TAB then
-			// TODO: Keep this feature? Will it mess with player name and emoji completion
-
-			eChat.ChangeTextEntryMode()
-
-		elseif code == KEY_ENTER then
-			-- Replicate the client pressing enter
-			
-			eChat.SendMessage(self:GetText())
-		end
-	end
 
 	eChat.chatLog = vgui.Create( "DHTML" , eChat.frame )
-	eChat.chatLog:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - 60 )
+	eChat.chatLog:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - 40 )
 	eChat.chatLog:SetPos( 5, 30 )
 	eChat.chatLog.Paint = function( self, w, h )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
 	end
 	eChat.oldPaint2 = eChat.chatLog.Paint
+	eChat.chatLog:SetVisible( true )
 	eChat.chatLog:OpenURL("http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time())
-	eChat.chatLog:SetAllowLua( true ) // TODO: Disable
+	eChat.chatLog:SetAllowLua( true )
 	UpdateFadeTime()
-	
-	local text = "Say :"
-
-	local say = vgui.Create("DLabel", eChat.frame)
-	say:SetText("")
-	surface.SetFont( "eChat_18")
-	local w, h = surface.GetTextSize( text )
-	say:SetSize( w + 5, 20 )
-	say:SetPos( 5, eChat.frame:GetTall() - eChat.entry:GetTall() - 5 )
-	
-	say.Paint = function( self, w, h )
-		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
-		draw.DrawText( text, "eChat_18", 2, 1, color_white )
-	end
-
-	say.Think = function( self )
-		local s = {}
-
-		if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then 
-			text = "Say (TEAM) :"	
-		elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
-			text = "Console :"
-		else
-			text = "Say :"
-			s.pw = 45
-			s.sw = eChat.frame:GetWide() - 50
-		end
-
-		if s then
-			if not s.pw then s.pw = self:GetWide() + 10 end
-			if not s.sw then s.sw = eChat.frame:GetWide() - self:GetWide() - 15 end
-		end
-
-		local w, h = surface.GetTextSize( text )
-		self:SetSize( w + 5, 20 )
-		self:SetPos( 5, eChat.frame:GetTall() - eChat.entry:GetTall() - 5 )
-
-		eChat.entry:SetSize( s.sw, 20 )
-		eChat.entry:SetPos( s.pw, eChat.frame:GetTall() - eChat.entry:GetTall() - 5 )
-	end	
 	
 	eChat.hideBox()
 end
@@ -204,9 +126,6 @@ function eChat.hideBox()
 	
 	-- We are done chatting
 	gamemode.Call("FinishChat")
-	
-	-- Clear the text entry
-	eChat.entry:SetText( "" )
 end
 
 --// Shows the chat box
@@ -363,8 +282,6 @@ function chat.AddText(...)
 	end
 
 	RenderTextLine(textComponents)
-
-	eChat.chatLog:SetVisible( true )
 end
 
 --// Write any server notifications
@@ -376,8 +293,6 @@ hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	end
 	
 	if type != "chat" then
-		eChat.chatLog:SetVisible( true )
-
 		RenderTextLine({ { text = text.."\n", colour = Color(0, 128, 255, 255) } })
 		return true
 	end
@@ -505,7 +420,3 @@ function eChat.ChangeTextEntryMode()
 
 	SelectTextEntryMode(newMode);
 end
-
-hook.Add("ChatTextChanged", "testmycallback", function(newValue)
-	print("New value " .. newValue)
-end)
