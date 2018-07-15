@@ -19,7 +19,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/eaf14a6bce5c1ccc12a828dff820a23059cfc0c7/emojichat.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/f0afc6b3b35441615a2323332edfb332f4f93cca/emojichat.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -28,7 +28,7 @@ eChat.config = {
 }
 
 // DEBUG
-eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()
+//eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()
 
 surface.CreateFont( "eChat_18", {
 	font = "Roboto Lt",
