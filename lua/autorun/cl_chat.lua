@@ -12,7 +12,7 @@ TEXTENTRYMODE_TEAM = 2
 TEXTENTRYMODE_CONSOLE = 3
 
 eChat = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/EmojiChat/b44de541ade5117a8b770c99974c78f23827ce35/emojichat.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/adf2ac7ea3e12de62e6ca368fa16cad8b80b7ab0/emojichat.html",
 	//htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()",
 	SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
 }

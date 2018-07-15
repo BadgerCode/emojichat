@@ -34,6 +34,7 @@ TODO:
     * And non-typeable characters problem
 * Font looks awful over bright lights
 * Make entity messages a blue colour
+* Try to use local version of html file instead of hosted one
 * Future
     * Support for server-custom emojis?
     * Allow styling tags?
