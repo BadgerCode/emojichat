@@ -14,6 +14,9 @@ HTML method:
 
 Unicode emoji fonts:
 * https://demos.emojione.com/latest/jstoimage.html
+* https://www.npmjs.com/package/emoji-names
+    * Emojis that start with what you typed come first (in alphabetical order)
+    * Followed by all other emojis that contain what you typed (in alphabetical order)
 
 
 
