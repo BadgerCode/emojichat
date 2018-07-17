@@ -19,7 +19,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat/f0afc6b3b35441615a2323332edfb332f4f93cca/emojichat.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/515bf4c89c0fe0f14da3ac99e068d9bed77fbd1d/dist/index.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -28,7 +28,7 @@ eChat.config = {
 }
 
 // DEBUG - DO NOT COMMIT UNCOMMENTED
-//eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()
+//eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat-html/dist/index.html?cachebuster=" .. os.time()
 
 surface.CreateFont( "eChat_18", {
 	font = "Roboto Lt",
@@ -338,28 +338,28 @@ function RenderTextLine(textComponents)
 		table.insert(eChat.ExistingMessages, textComponents)
 	else
 		local json = string.JavascriptSafe(util.TableToJSON(textComponents))
-		eChat.chatLog:QueueJavascript("addOutput('" .. json  .. "')")
+		eChat.chatLog:QueueJavascript("emojiChat.addOutput('" .. json  .. "')")
 	end
 end
 
 function SetTextOutputActive()
-	eChat.chatLog:QueueJavascript("setActive()")
+	eChat.chatLog:QueueJavascript("emojiChat.setActive()")
 end
 
 function SetTextOutputInactive()
-	eChat.chatLog:QueueJavascript("setInactive()")
+	eChat.chatLog:QueueJavascript("emojiChat.setInactive()")
 end
 
 function UpdateFadeTime(durationInSeconds)
 	if(durationInSeconds != nil) then
 		eChat.config.fadeTime = durationInSeconds;
 	end
-	eChat.chatLog:QueueJavascript("setFadeTime(" .. eChat.config.fadeTime .. ")")
+	eChat.chatLog:QueueJavascript("emojiChat.setFadeTime(" .. eChat.config.fadeTime .. ")")
 end
 
 function SelectTextEntryMode(textEntryMode)
 	eChat.SelectedTextEntryMode = textEntryMode
-	eChat.chatLog:QueueJavascript("setTextEntryMode('" .. eChat.SelectedTextEntryMode .. "')")
+	eChat.chatLog:QueueJavascript("emojiChat.setTextEntryMode('" .. eChat.SelectedTextEntryMode .. "')")
 end
 
 function eChat.SendMessage(message)
