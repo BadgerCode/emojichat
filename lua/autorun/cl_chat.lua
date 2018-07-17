@@ -27,7 +27,7 @@ eChat.config = {
 	serverMessageColour = Color(151, 211, 255, 255)
 }
 
-// DEBUG
+// DEBUG - DO NOT COMMIT UNCOMMENTED
 //eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat.html?cachebuster=" .. os.time()
 
 surface.CreateFont( "eChat_18", {
