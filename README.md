@@ -1,5 +1,7 @@
 For the HTML component, see https://github.com/BadgerCode/emojichat-html
 
+eChat used as a starting point- https://github.com/Exho1/eChat/
+
 TODO:
 * Maybe fix rendering of emojis in input box
 * Try to use local version of html file instead of hosted one
