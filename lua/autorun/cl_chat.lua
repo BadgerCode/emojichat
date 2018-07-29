@@ -1,6 +1,5 @@
-----// eChat //----
--- Author: Exho (obviously), Tomelyr, LuaTenshi
--- Version: 4/12/15
+-- Emoji chat by Badger
+-- Base lua script by Exho, Tomelyr, LuaTenshi
 
 if SERVER then
 	AddCSLuaFile()
@@ -28,7 +27,7 @@ eChat.config = {
 }
 
 // DEBUG - DO NOT COMMIT UNCOMMENTED
-//eChat.config.htmlURL = "http://localhost/~michael/emojichat/emojichat-html/dist/index.html?cachebuster=" .. os.time()
+// eChat.config.htmlURL = "http://localhost:8080"
 
 surface.CreateFont( "eChat_18", {
 	font = "Roboto Lt",
@@ -294,11 +293,11 @@ hook.Remove("PlayerBindPress", "echat_hijackbind")
 hook.Add("PlayerBindPress", "echat_hijackbind", function(ply, bind, pressed)
 	if string.sub( bind, 1, 11 ) == "messagemode" then
 		if bind == "messagemode2" then 
-			eChat.SelectedTextEntryMode = TEXTENTRYMODE_TEAM
+			eChat.SelectTextEntryMode(TEXTENTRYMODE_TEAM)
 		else
-			eChat.SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL
+			eChat.SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
 		end
-		
+
 		eChat.showBox()
 		return true
 	end
@@ -357,7 +356,7 @@ function UpdateFadeTime(durationInSeconds)
 	eChat.chatLog:QueueJavascript("emojiChat.setFadeTime(" .. eChat.config.fadeTime .. ")")
 end
 
-function SelectTextEntryMode(textEntryMode)
+function eChat.SelectTextEntryMode(textEntryMode)
 	eChat.SelectedTextEntryMode = textEntryMode
 	eChat.chatLog:QueueJavascript("emojiChat.setTextEntryMode('" .. eChat.SelectedTextEntryMode .. "')")
 end
@@ -377,7 +376,7 @@ function eChat.SendMessage(message)
 		end
 	end
 
-	SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
+	eChat.SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
 	eChat.hideBox()
 	eChat.InputChange("")
 end
@@ -397,7 +396,7 @@ function eChat.ChangeTextEntryMode()
 		newMode = TEXTENTRYMODE_GLOBAL
 	end
 
-	SelectTextEntryMode(newMode);
+	eChat.SelectTextEntryMode(newMode);
 end
 
 
