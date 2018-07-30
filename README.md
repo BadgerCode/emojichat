@@ -33,9 +33,3 @@ eChat used as a starting point- https://github.com/Exho1/eChat/
     * How will this hook into other chat systems?
         * Tags etc
     * Use hud_saytext_time
-* Tidy up
-    * Separate modules
-        * Default chat/hooks override
-        * GUI setup
-        * GUI event callbacks
-    * better logic to detect when a timestamp should be added (always?)
