@@ -18,7 +18,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/5358453fb3b40157efb51f925d9530f492194d81/dist/index.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/bbf1b0512828a7725ff0af51607ecb04ac6f8320/dist/index.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -398,6 +398,10 @@ function eChat.ChangeTextEntryMode()
 	end
 
 	eChat.SelectTextEntryMode(newMode);
+end
+
+function eChat.PlayWarningSound()
+	surface.PlaySound("resource/warning.wav")
 end
 
 
