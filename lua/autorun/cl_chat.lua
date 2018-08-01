@@ -6,19 +6,22 @@ if SERVER then
 	return
 end
 
-TEXTENTRYMODE_GLOBAL = 1
-TEXTENTRYMODE_TEAM = 2
-TEXTENTRYMODE_CONSOLE = 3
+CHATMODE_GLOBAL = 1
+CHATMODE_TEAM = 2
+
+DESTINATION_GLOBAL = 1
+DESTINATION_TEAM = 2
+DESTINATION_CONSOLE = 3
 
 eChat = {
 	Ready = false,
 	Active = false,
-	SelectedTextEntryMode = TEXTENTRYMODE_GLOBAL,
+	ChatMode = CHATMODE_GLOBAL,
 	ExistingMessages = { }
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/bbf1b0512828a7725ff0af51607ecb04ac6f8320/dist/index.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/fa7aad9fba725af2a166a2624f05ff9dfda6b876/dist/index.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -94,7 +97,7 @@ function eChat.buildBox()
 	eChat.RenderExistingMessages()
 
 	if(eChat.Active) then
-		eChat.showBox()
+		eChat.showBox(eChat.ChatMode)
 	else
 		eChat.hideBox()
 	end
@@ -132,13 +135,14 @@ function eChat.hideBox()
 end
 
 
-function eChat.showBox()
+function eChat.showBox(mode)
 	if not eChat.Ready then
 		eChat.Active = true
+		eChat.ChatMode = mode
 		return
 	end
 
-	SetTextOutputActive()
+	SetTextOutputActive(mode)
 	
 	local children = eChat.frame:GetChildren()
 	for _, pnl in pairs( children ) do
@@ -293,13 +297,12 @@ end)
 hook.Remove("PlayerBindPress", "echat_hijackbind")
 hook.Add("PlayerBindPress", "echat_hijackbind", function(ply, bind, pressed)
 	if string.sub( bind, 1, 11 ) == "messagemode" then
+		local chatMode = CHATMODE_GLOBAL
 		if bind == "messagemode2" then 
-			eChat.SelectTextEntryMode(TEXTENTRYMODE_TEAM)
-		else
-			eChat.SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
+			chatMode = CHATMODE_TEAM
 		end
 
-		eChat.showBox()
+		eChat.showBox(chatMode)
 		return true
 	end
 end)
@@ -342,8 +345,13 @@ function RenderTextLine(textComponents)
 	end
 end
 
-function SetTextOutputActive()
-	eChat.chatLog:QueueJavascript("emojiChat.setActive()")
+function SetTextOutputActive(chatMode)
+	local desination = DESTINATION_GLOBAL
+	if(chatMode == CHATMODE_TEAM) then
+		desination = DESTINATION_TEAM
+	end
+
+	eChat.chatLog:QueueJavascript("emojiChat.setActive(" .. desination .. ")")
 end
 
 function SetTextOutputInactive()
@@ -357,18 +365,13 @@ function UpdateFadeTime(durationInSeconds)
 	eChat.chatLog:QueueJavascript("emojiChat.setFadeTime(" .. eChat.config.fadeTime .. ")")
 end
 
-function eChat.SelectTextEntryMode(textEntryMode)
-	eChat.SelectedTextEntryMode = textEntryMode
-	eChat.chatLog:QueueJavascript("emojiChat.setTextEntryMode('" .. eChat.SelectedTextEntryMode .. "')")
-end
-
-function eChat.SendMessage(message)
+function eChat.SendMessage(message, destination)
 	if string.Trim( message ) != "" then
 
-		if eChat.SelectedTextEntryMode == TEXTENTRYMODE_TEAM then
+		if destination == DESTINATION_TEAM then
 			LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
 
-		elseif eChat.SelectedTextEntryMode == TEXTENTRYMODE_CONSOLE then
+		elseif destination == DESTINATION_CONSOLE then
 			LocalPlayer():ConCommand(message or "")
 
 		else
@@ -377,7 +380,6 @@ function eChat.SendMessage(message)
 		end
 	end
 
-	eChat.SelectTextEntryMode(TEXTENTRYMODE_GLOBAL)
 	eChat.hideBox()
 	eChat.InputChange("")
 end
@@ -389,15 +391,6 @@ end
 function eChat.CloseChat()
 	eChat.hideBox()
 	gui.HideGameUI()
-end
-
-function eChat.ChangeTextEntryMode()
-	local newMode = eChat.SelectedTextEntryMode + 1
-	if(newMode > TEXTENTRYMODE_CONSOLE) then
-		newMode = TEXTENTRYMODE_GLOBAL
-	end
-
-	eChat.SelectTextEntryMode(newMode);
 end
 
 function eChat.PlayWarningSound()
