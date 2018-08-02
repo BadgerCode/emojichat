@@ -10,12 +10,13 @@ _Alpha 0.1.0_
 ### Emojis!
 
 ![Preview image](https://i.imgur.com/N0HpYcE.jpg)
-https://i.gyazo.com/c49aae37b367e714f20990b9ea599966.mp4
+> https://i.gyazo.com/c49aae37b367e714f20990b9ea599966.mp4
 
 ### Emoji suggestions & completion
 
 ![emoji completion preview](https://i.imgur.com/ZRzpQQy.jpg)
-https://i.gyazo.com/26d270c1c14a6ca4fb652ccfdd75caee.mp4
+> https://i.gyazo.com/26d270c1c14a6ca4fb652ccfdd75caee.mp4
+
 
 * When emoji suggestions appear, use the up and down arrow to change which one is selected
 * Press TAB to insert the text code for the emoji you wish to use
