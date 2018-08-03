@@ -31,24 +31,3 @@ eChat used as a starting point- https://github.com/Exho1/eChat/
 ## TODO:
 * Overall- https://github.com/BadgerCode/emojichat/issues
 * Chat HTML renderer- https://github.com/BadgerCode/emojichat-html/issues
-
-### Uncategorised
-* Maybe fix rendering of emojis in input box
-* Try to use local version of html file instead of hosted one
-* Intercept ` key presses and prevent console from showing up
-* Make it so the UI doesn't jitter when escape is pressed
-* Tab auto-complete player name
-    * Maybe try to fix the "space in name" problem
-    * And non-typeable characters problem
-* Future
-    * Support for server-custom emojis?
-    * Tell people the chat shortcuts
-        * : for emojis
-        * TAB to autocomplete emojis/change chat
-    * Allow styling tags?
-        * Could allow some basic markdown
-    * Maybe show history before player joined?
-        * Default shows what the player last saw from their previous connection
-    * How will this hook into other chat systems?
-        * Tags etc
-    * Use hud_saytext_time
