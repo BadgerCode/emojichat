@@ -21,7 +21,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/fa7aad9fba725af2a166a2624f05ff9dfda6b876/dist/index.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/e825e5f525f4650fd82e02738ae0297add05afea/dist/index.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -390,6 +390,10 @@ end
 
 function eChat.CloseChat()
 	eChat.hideBox()
+	gui.HideGameUI()
+end
+
+function eChat.HideMenu()
 	gui.HideGameUI()
 end
 
