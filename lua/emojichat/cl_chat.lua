@@ -1,10 +1,6 @@
 -- Emoji chat by Badger
 -- Base lua script by Exho, Tomelyr, LuaTenshi
 
-if SERVER then
-	AddCSLuaFile()
-	return
-end
 
 CHATMODE_GLOBAL = 1
 CHATMODE_TEAM = 2
