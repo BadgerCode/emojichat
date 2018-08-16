@@ -1,3 +1,8 @@
+DESTINATION_GLOBAL = 1
+DESTINATION_TEAM = 2
+DESTINATION_CONSOLE = 3
+
+
 HTMLChatComponent = { }
 HTMLChatComponent.__index = HTMLChatComponent
 

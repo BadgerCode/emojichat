@@ -3,7 +3,7 @@ _For the HTML component, see https://github.com/BadgerCode/emojichat-html_
 ----
 
 # Garry's Mod Emoji Chat
-_Alpha 0.1.0_
+_Alpha 0.1.2_
 
 ## Features
 
@@ -23,7 +23,8 @@ _Alpha 0.1.0_
 
 
 ## Credits
-eChat used as a starting point- https://github.com/Exho1/eChat/
+* eChat used as a starting point- https://github.com/Exho1/eChat/
+* Blur function created by Chessnut from NutScript
 
 
 

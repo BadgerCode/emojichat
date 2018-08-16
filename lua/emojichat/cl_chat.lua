@@ -1,13 +1,5 @@
--- Emoji chat by Badger
--- Base lua script by Exho, Tomelyr, LuaTenshi
-
-
 CHATMODE_GLOBAL = 1
 CHATMODE_TEAM = 2
-
-DESTINATION_GLOBAL = 1
-DESTINATION_TEAM = 2
-DESTINATION_CONSOLE = 3
 
 eChat = {
 	Ready = false,
@@ -52,7 +44,7 @@ function eChat.buildBox()
 	eChat.frame.Paint = function( self, w, h )
 		if not eChat.Active then return end
 
-		eChat.blur( self, 10, 20, 255 )
+		BlurPanel( self, 10, 20, 255 )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
 		
 		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
@@ -157,7 +149,6 @@ function eChat.showBox(mode)
 	hook.Run("StartChat")
 end
 
---// Opens the settings panel
 function eChat.openSettings()
 	eChat.hideBox()
 	
@@ -168,7 +159,7 @@ function eChat.openSettings()
 	eChat.frameS:SetPos( ScrW()/2 - eChat.frameS:GetWide()/2, ScrH()/2 - eChat.frameS:GetTall()/2 )
 	eChat.frameS:ShowCloseButton( true )
 	eChat.frameS.Paint = function( self, w, h )
-		eChat.blur( self, 10, 20, 255 )
+		BlurPanel( self, 10, 20, 255 )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
 		
 		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
@@ -232,46 +223,6 @@ function eChat.openSettings()
 		eChat.config.timeStamps = checkbox1:GetChecked() 
 		eChat.UpdateFadeTime(tonumber(textEntry:GetText()))
 	end
-end
-
---// Panel based blur function by Chessnut from NutScript
-local blur = Material( "pp/blurscreen" )
-function eChat.blur( panel, layers, density, alpha )
-	-- Its a scientifically proven fact that blur improves a script
-	local x, y = panel:LocalToScreen(0, 0)
-
-	surface.SetDrawColor( 255, 255, 255, alpha )
-	surface.SetMaterial( blur )
-
-	for i = 1, 3 do
-		blur:SetFloat( "$blur", ( i / layers ) * density )
-		blur:Recompute()
-
-		render.UpdateScreenEffectTexture()
-		surface.DrawTexturedRect( -x, -y, ScrW(), ScrH() )
-	end
-end
-
-local oldAddText = chat.AddText
---// Overwrite chat.AddText to detour it into my chatbox
-function chat.AddText(...)
-	eChat.AddLine(TextComponentBuilder.Build(...))
-	oldAddText(...)
-end
-
- --// Modify the Chatbox for align.
-local oldGetChatBoxPos = chat.GetChatBoxPos
-function chat.GetChatBoxPos()
-	return eChat.frame:GetPos()
-end
-
-function chat.GetChatBoxSize()
-	return eChat.frame:GetSize()
-end
-
-chat.Open = eChat.showBox
-function chat.Close(...) 
-	eChat.hideBox(...)
 end
 
 function eChat.AddLine(textComponents)
