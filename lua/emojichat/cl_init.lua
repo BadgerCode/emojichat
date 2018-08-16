@@ -11,13 +11,17 @@ eChat = {
 
 eChat.config = {
 	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/96622cf1264755f2e90cab99dcaf8eb4d415a503/dist/index.html",
-	timeStamps = true,
+	timestamps = true,
 	position = 1,	
 	fadeTime = 12,
 	defaultChatColour = Color(255, 255, 255, 255),
-	serverMessageColour = Color(151, 211, 255, 255),
-	timestampColour = Color(130, 130, 130, 255)
+	timestampColour = Color(130, 130, 130, 255),
+	serverMessageColour = Color(151, 211, 255, 255)
 }
+
+TextComponentBuilder.SetDefaultChatColour(eChat.config.defaultChatColour)
+TextComponentBuilder.SetTimestampChatColour(eChat.config.timestampColour)
+TextComponentBuilder.SetTimestampsEnabled(eChat.config.timestamps)
 
 // DEBUG - DO NOT COMMIT UNCOMMENTED
 //eChat.config.htmlURL = "http://localhost:8080"
@@ -181,7 +185,7 @@ function eChat.openSettings()
 	
 	local checkbox1 = vgui.Create("DCheckBox", eChat.frameS ) 
 	checkbox1:SetPos(label1:GetWide() + 15, 42)
-	checkbox1:SetValue( eChat.config.timeStamps )
+	checkbox1:SetValue( eChat.config.timestamps )
 	
 	local label2 = vgui.Create("DLabel", eChat.frameS)
 	label2:SetText( "Fade time: " )
@@ -220,7 +224,7 @@ function eChat.openSettings()
 	save.DoClick = function( self )
 		eChat.frameS:Close()
 		
-		eChat.config.timeStamps = checkbox1:GetChecked() 
+		eChat.config.timestamps = checkbox1:GetChecked()
 		eChat.UpdateFadeTime(tonumber(textEntry:GetText()))
 	end
 end
@@ -231,6 +235,10 @@ function eChat.AddLine(textComponents)
 	else
 		eChat.HTMLOutput:RenderTextLine(textComponents)
 	end
+end
+
+function eChat.AddServerMessage(message)
+	eChat.AddLine(TextComponentBuilder.Build(eChat.config.serverMessageColour, message))
 end
 
 function eChat.UpdateFadeTime(durationInSeconds)
