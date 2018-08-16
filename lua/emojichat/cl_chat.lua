@@ -253,33 +253,9 @@ function eChat.blur( panel, layers, density, alpha )
 end
 
 local oldAddText = chat.AddText
-
 --// Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
-	local activeColour = eChat.config.defaultChatColour
-	local textComponents = {}
-
-	-- Iterate through the strings and colors
-	for _, obj in pairs( {...} ) do
-		if type(obj) == "table" then
-			activeColour = obj
-		elseif type(obj) == "string"  then
-			table.insert( textComponents, TextComponent(obj, activeColour))
-		elseif obj:IsPlayer() then
-			local ply = obj
-			
-			if eChat.config.timeStamps then
-				table.insert( textComponents, TextComponent("["..os.date("%X").."] ", eChat.config.timestampColour))
-			end
-
-			local col = GAMEMODE:GetTeamColor( ply )
-			table.insert( textComponents, TextComponent(ply:Nick(), Color(col.r, col.g, col.b, 255)))
-		elseif IsEntity(obj) then
-			table.insert( textComponents, TextComponent(obj:GetClass(), eChat.config.defaultChatColour))
-		end
-	end
-
-	eChat.AddLine(textComponents)
+	eChat.AddLine(TextComponentBuilder.Build(...))
 	oldAddText(...)
 end
 
@@ -296,12 +272,6 @@ end
 chat.Open = eChat.showBox
 function chat.Close(...) 
 	eChat.hideBox(...)
-end
-
-
-function TextComponent(text, colour)
-	local component = { text = text, colour = colour }
-	return component
 end
 
 function eChat.AddLine(textComponents)

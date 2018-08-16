@@ -1,7 +1,7 @@
 hook.Remove("Initialize", "echat_init")
 hook.Add("Initialize", "echat_init", function()
     -- TODO: Can this get called too early?
-    eChat.AddLine({ TextComponent("EmojiChat by Badger", eChat.config.serverMessageColour) })
+    eChat.AddLine({ TextComponent.Create("EmojiChat by Badger", eChat.config.serverMessageColour) })
     eChat.buildBox()
 end)
 
@@ -9,7 +9,7 @@ end)
 hook.Remove( "ChatText", "echat_joinleave")
 hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
 	if type != "chat" then
-		eChat.AddLine({ TextComponent(text, eChat.config.serverMessageColour) })
+		eChat.AddLine({ TextComponent.Create(text, eChat.config.serverMessageColour) })
 		return true
 	end
 end)
