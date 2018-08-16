@@ -18,7 +18,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/e825e5f525f4650fd82e02738ae0297add05afea/dist/index.html",
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/96622cf1264755f2e90cab99dcaf8eb4d415a503/dist/index.html",
 	timeStamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -302,42 +302,6 @@ end
 function TextComponent(text, colour)
 	local component = { text = text, colour = colour }
 	return component
-end
-
-function eChat.SendMessage(message, destination)
-	if string.Trim( message ) != "" then
-
-		if destination == DESTINATION_TEAM then
-			LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
-
-		elseif destination == DESTINATION_CONSOLE then
-			LocalPlayer():ConCommand(message or "")
-
-		else
-			LocalPlayer():ConCommand("say \"" .. message .. "\"")
-
-		end
-	end
-
-	eChat.hideBox()
-	eChat.InputChange("")
-end
-
-function eChat.InputChange(newValue)
-	hook.Run("ChatTextChanged", newValue)
-end
-
-function eChat.CloseChat()
-	eChat.hideBox()
-	gui.HideGameUI()
-end
-
-function eChat.HideMenu()
-	gui.HideGameUI()
-end
-
-function eChat.PlayWarningSound()
-	surface.PlaySound("resource/warning.wav")
 end
 
 function eChat.AddLine(textComponents)
