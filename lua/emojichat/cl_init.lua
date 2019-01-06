@@ -1,34 +1,27 @@
--- Emoji chat by Badger
--- Base lua script by Exho, Tomelyr, LuaTenshi
-
-if SERVER then
-	AddCSLuaFile()
-	return
-end
-
 CHATMODE_GLOBAL = 1
 CHATMODE_TEAM = 2
-
-DESTINATION_GLOBAL = 1
-DESTINATION_TEAM = 2
-DESTINATION_CONSOLE = 3
 
 eChat = {
 	Ready = false,
 	Active = false,
 	ChatMode = CHATMODE_GLOBAL,
-	ExistingMessages = { }
+	ExistingMessages = { },
+	HTMLOutput = nil
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/fa7aad9fba725af2a166a2624f05ff9dfda6b876/dist/index.html",
-	timeStamps = true,
+	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/96622cf1264755f2e90cab99dcaf8eb4d415a503/dist/index.html",
+	timestamps = true,
 	position = 1,	
 	fadeTime = 12,
 	defaultChatColour = Color(255, 255, 255, 255),
-	serverMessageColour = Color(151, 211, 255, 255),
-	timestampColour = Color(130, 130, 130, 255)
+	timestampColour = Color(130, 130, 130, 255),
+	serverMessageColour = Color(151, 211, 255, 255)
 }
+
+TextComponentBuilder.SetDefaultChatColour(eChat.config.defaultChatColour)
+TextComponentBuilder.SetTimestampChatColour(eChat.config.timestampColour)
+TextComponentBuilder.SetTimestampsEnabled(eChat.config.timestamps)
 
 // DEBUG - DO NOT COMMIT UNCOMMENTED
 //eChat.config.htmlURL = "http://localhost:8080"
@@ -42,7 +35,6 @@ surface.CreateFont( "eChat_18", {
 	extended = true,
 })
 
---// Builds the chatbox but doesn't display it
 function eChat.buildBox()
 	eChat.frame = vgui.Create("DFrame")
 	eChat.frame:SetSize( ScrW()*0.375, ScrH()*0.25 )
@@ -56,7 +48,7 @@ function eChat.buildBox()
 	eChat.frame.Paint = function( self, w, h )
 		if not eChat.Active then return end
 
-		eChat.blur( self, 10, 20, 255 )
+		BlurPanel( self, 10, 20, 255 )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
 		
 		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
@@ -91,7 +83,10 @@ function eChat.buildBox()
 	eChat.chatLog:SetVisible( true )
 	eChat.chatLog:OpenURL(eChat.config.htmlURL)
 	eChat.chatLog:SetAllowLua( true )
-	UpdateFadeTime()
+
+	eChat.HTMLOutput = HTMLChatComponent.New(eChat.chatLog)
+
+	eChat.UpdateFadeTime()
 
 	eChat.Ready = true
 	eChat.RenderExistingMessages()
@@ -105,7 +100,7 @@ end
 
 function eChat.RenderExistingMessages()
 	for _, message in pairs( eChat.ExistingMessages ) do
-		RenderTextLine(message)
+		eChat.AddLine(message)
 	end
 end
 
@@ -115,7 +110,7 @@ function eChat.hideBox()
 		return
 	end
 
-	SetTextOutputInactive()
+	eChat.HTMLOutput:SetInactive()
 	
 	local children = eChat.frame:GetChildren()
 	for _, pnl in pairs( children ) do
@@ -142,7 +137,7 @@ function eChat.showBox(mode)
 		return
 	end
 
-	SetTextOutputActive(mode)
+	eChat.HTMLOutput:SetActive(mode)
 	
 	local children = eChat.frame:GetChildren()
 	for _, pnl in pairs( children ) do
@@ -158,7 +153,6 @@ function eChat.showBox(mode)
 	hook.Run("StartChat")
 end
 
---// Opens the settings panel
 function eChat.openSettings()
 	eChat.hideBox()
 	
@@ -169,7 +163,7 @@ function eChat.openSettings()
 	eChat.frameS:SetPos( ScrW()/2 - eChat.frameS:GetWide()/2, ScrH()/2 - eChat.frameS:GetTall()/2 )
 	eChat.frameS:ShowCloseButton( true )
 	eChat.frameS.Paint = function( self, w, h )
-		eChat.blur( self, 10, 20, 255 )
+		BlurPanel( self, 10, 20, 255 )
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 200 ) )
 		
 		draw.RoundedBox( 0, 0, 0, w, 25, Color( 80, 80, 80, 100 ) )
@@ -191,7 +185,7 @@ function eChat.openSettings()
 	
 	local checkbox1 = vgui.Create("DCheckBox", eChat.frameS ) 
 	checkbox1:SetPos(label1:GetWide() + 15, 42)
-	checkbox1:SetValue( eChat.config.timeStamps )
+	checkbox1:SetValue( eChat.config.timestamps )
 	
 	local label2 = vgui.Create("DLabel", eChat.frameS)
 	label2:SetText( "Fade time: " )
@@ -230,181 +224,27 @@ function eChat.openSettings()
 	save.DoClick = function( self )
 		eChat.frameS:Close()
 		
-		eChat.config.timeStamps = checkbox1:GetChecked() 
-		UpdateFadeTime(tonumber(textEntry:GetText()))
+		eChat.config.timestamps = checkbox1:GetChecked()
+		eChat.UpdateFadeTime(tonumber(textEntry:GetText()))
 	end
 end
 
---// Panel based blur function by Chessnut from NutScript
-local blur = Material( "pp/blurscreen" )
-function eChat.blur( panel, layers, density, alpha )
-	-- Its a scientifically proven fact that blur improves a script
-	local x, y = panel:LocalToScreen(0, 0)
-
-	surface.SetDrawColor( 255, 255, 255, alpha )
-	surface.SetMaterial( blur )
-
-	for i = 1, 3 do
-		blur:SetFloat( "$blur", ( i / layers ) * density )
-		blur:Recompute()
-
-		render.UpdateScreenEffectTexture()
-		surface.DrawTexturedRect( -x, -y, ScrW(), ScrH() )
-	end
-end
-
-local oldAddText = chat.AddText
-
---// Overwrite chat.AddText to detour it into my chatbox
-function chat.AddText(...)
-	local activeColour = eChat.config.defaultChatColour
-	local textComponents = {}
-
-	-- Iterate through the strings and colors
-	for _, obj in pairs( {...} ) do
-		if type(obj) == "table" then
-			activeColour = obj
-		elseif type(obj) == "string"  then
-			table.insert( textComponents, TextComponent(obj, activeColour))
-		elseif obj:IsPlayer() then
-			local ply = obj
-			
-			if eChat.config.timeStamps then
-				table.insert( textComponents, TextComponent("["..os.date("%X").."] ", eChat.config.timestampColour))
-			end
-
-			local col = GAMEMODE:GetTeamColor( ply )
-			table.insert( textComponents, TextComponent(ply:Nick(), Color(col.r, col.g, col.b, 255)))
-		elseif IsEntity(obj) then
-			table.insert( textComponents, TextComponent(obj:GetClass(), eChat.config.defaultChatColour))
-		end
-	end
-
-	RenderTextLine(textComponents)
-	oldAddText(...)
-end
-
---// Write any server notifications
-hook.Remove( "ChatText", "echat_joinleave")
-hook.Add( "ChatText", "echat_joinleave", function( index, name, text, type )
-	if type != "chat" then
-		RenderTextLine({ TextComponent(text, eChat.config.serverMessageColour) })
-		return true
-	end
-end)
-
---// Stops the default chat box from being opened
-hook.Remove("PlayerBindPress", "echat_hijackbind")
-hook.Add("PlayerBindPress", "echat_hijackbind", function(ply, bind, pressed)
-	if string.sub( bind, 1, 11 ) == "messagemode" then
-		local chatMode = CHATMODE_GLOBAL
-		if bind == "messagemode2" then 
-			chatMode = CHATMODE_TEAM
-		end
-
-		eChat.showBox(chatMode)
-		return true
-	end
-end)
-
---// Hide the default chat too in case that pops up
-hook.Remove("HUDShouldDraw", "echat_hidedefault")
-hook.Add("HUDShouldDraw", "echat_hidedefault", function( name )
-	if name == "CHudChat" then
-		return false
-	end
-end)
-
- --// Modify the Chatbox for align.
-local oldGetChatBoxPos = chat.GetChatBoxPos
-function chat.GetChatBoxPos()
-	return eChat.frame:GetPos()
-end
-
-function chat.GetChatBoxSize()
-	return eChat.frame:GetSize()
-end
-
-chat.Open = eChat.showBox
-function chat.Close(...) 
-	eChat.hideBox(...)
-end
-
-
-function TextComponent(text, colour)
-	local component = { text = text, colour = colour }
-	return component
-end
-
-function RenderTextLine(textComponents)
+function eChat.AddLine(textComponents)
 	if not eChat.Ready then
 		table.insert(eChat.ExistingMessages, textComponents)
 	else
-		local json = string.JavascriptSafe(util.TableToJSON(textComponents))
-		eChat.chatLog:QueueJavascript("emojiChat.addOutput('" .. json  .. "')")
+		eChat.HTMLOutput:RenderTextLine(textComponents)
 	end
 end
 
-function SetTextOutputActive(chatMode)
-	local desination = DESTINATION_GLOBAL
-	if(chatMode == CHATMODE_TEAM) then
-		desination = DESTINATION_TEAM
-	end
-
-	eChat.chatLog:QueueJavascript("emojiChat.setActive(" .. desination .. ")")
+function eChat.AddServerMessage(message)
+	eChat.AddLine(TextComponentBuilder.Build(eChat.config.serverMessageColour, message))
 end
 
-function SetTextOutputInactive()
-	eChat.chatLog:QueueJavascript("emojiChat.setInactive()")
-end
-
-function UpdateFadeTime(durationInSeconds)
+function eChat.UpdateFadeTime(durationInSeconds)
 	if(durationInSeconds != nil) then
 		eChat.config.fadeTime = durationInSeconds;
 	end
-	eChat.chatLog:QueueJavascript("emojiChat.setFadeTime(" .. eChat.config.fadeTime .. ")")
+
+	eChat.HTMLOutput:UpdateFadeTime(eChat.config.fadeTime)
 end
-
-function eChat.SendMessage(message, destination)
-	if string.Trim( message ) != "" then
-
-		if destination == DESTINATION_TEAM then
-			LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
-
-		elseif destination == DESTINATION_CONSOLE then
-			LocalPlayer():ConCommand(message or "")
-
-		else
-			LocalPlayer():ConCommand("say \"" .. message .. "\"")
-
-		end
-	end
-
-	eChat.hideBox()
-	eChat.InputChange("")
-end
-
-function eChat.InputChange(newValue)
-	hook.Run("ChatTextChanged", newValue)
-end
-
-function eChat.CloseChat()
-	eChat.hideBox()
-	gui.HideGameUI()
-end
-
-function eChat.PlayWarningSound()
-	surface.PlaySound("resource/warning.wav")
-end
-
-
---// Prevents errors if the script runs too early, which it will
-if not GAMEMODE then
-	hook.Remove("Initialize", "echat_init")
-	hook.Add("Initialize", "echat_init", function()
-		RenderTextLine({ TextComponent("EmojiChat by Badger", eChat.config.serverMessageColour) })
-		eChat.buildBox()
-	end)
-	return
-end
-
