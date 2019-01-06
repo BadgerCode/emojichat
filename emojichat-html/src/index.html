@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/emojione@3.1.7/lib/js/emojione.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojione@3.1.7/extras/css/emojione.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    <style>
+        body {
+            background-color: transparent;
+            color: rgb(230, 230, 230);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 700;
+            text-shadow: 0 0 2px black;
+        }
+
+        #output {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 25px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        .line {
+            min-height: 3ex;
+        }
+
+        .line>* {
+            word-wrap: break-word;
+        }
+
+        .inactive-line {
+            opacity: 0;
+        }
+
+        #input-suggestions {
+            position: absolute;
+            left: 0;
+            right: 17px;
+            bottom: 25px;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            z-index: 999;
+            font-size: 12px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        #emoji-suggestion-0 {
+            border-radius: 5px 5px 0 0;
+        }
+
+        .emoji-suggestion {
+            padding-left: 10px;
+        }
+
+        .selected-emoji-suggestion {
+            background: rgba(128, 128, 255, 0.5);
+        }
+
+        #input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 17px;
+            height: 25px;
+            display: none;
+        }
+
+        #input-box-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        #input-box {
+            background: transparent;
+            color: rgb(230, 230, 230);
+            height: 25px;
+            font-size: 16px;
+            padding: 0;
+            border: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div id="output"></div>
+    <div id="input-suggestions"></div>
+    <div id="input">
+        <span id="input-prompt"></span>
+        <div id="input-box-wrapper">
+            <input id="input-box" type="text" />
+        </div>
+    </div>
+</body>
+
+</html>

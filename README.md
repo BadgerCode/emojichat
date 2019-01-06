@@ -1,13 +1,9 @@
-_For the HTML component, see https://github.com/BadgerCode/emojichat-html_
-
-----
-
 # Garry's Mod Emoji Chat
 _Alpha 0.1.2_
 
-## Features
+# Features
 
-### Emojis!
+## Emojis!
 
 ![Preview image](https://i.imgur.com/N0HpYcE.jpg)
 > https://i.gyazo.com/c49aae37b367e714f20990b9ea599966.mp4
@@ -22,13 +18,13 @@ _Alpha 0.1.2_
 * Press TAB to insert the text code for the emoji you wish to use
 
 
-## Credits
+
+# Developer Guide
+* For the HTML chatbox, see the [README](/emojichat-html/README.md) in `emojichat-html`.
+    * Old commits can be found [here](https://github.com/BadgerCode/emojichat-html).
+
+
+
+# Credits
 * eChat used as a starting point- https://github.com/Exho1/eChat/
 * Blur function created by Chessnut from NutScript
-
-
-
-
-## TODO:
-* Overall- https://github.com/BadgerCode/emojichat/issues
-* Chat HTML renderer- https://github.com/BadgerCode/emojichat-html/issues
