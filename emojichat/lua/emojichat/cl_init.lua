@@ -10,7 +10,7 @@ eChat = {
 }
 
 eChat.config = {
-	htmlURL = "https://cdn.rawgit.com/BadgerCode/emojichat-html/96622cf1264755f2e90cab99dcaf8eb4d415a503/dist/index.html",
+	html = "Loading...",
 	timestamps = true,
 	position = 1,	
 	fadeTime = 12,
@@ -22,9 +22,6 @@ eChat.config = {
 TextComponentBuilder.SetDefaultChatColour(eChat.config.defaultChatColour)
 TextComponentBuilder.SetTimestampChatColour(eChat.config.timestampColour)
 TextComponentBuilder.SetTimestampsEnabled(eChat.config.timestamps)
-
-// DEBUG - DO NOT COMMIT UNCOMMENTED
-//eChat.config.htmlURL = "http://localhost:8080"
 
 surface.CreateFont( "eChat_18", {
 	font = "Roboto Lt",
@@ -81,7 +78,7 @@ function eChat.buildBox()
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
 	end
 	eChat.chatLog:SetVisible( true )
-	eChat.chatLog:OpenURL(eChat.config.htmlURL)
+	eChat.chatLog:SetHTML(eChat.config.html)
 	eChat.chatLog:SetAllowLua( true )
 
 	eChat.HTMLOutput = HTMLChatComponent.New(eChat.chatLog)
