@@ -20,8 +20,19 @@ _Alpha 0.1.2_
 
 
 # Developer Guide
-* For the HTML chatbox, see the [README](/emojichat-html/README.md) in `emojichat-html`.
-    * Old commits can be found [here](https://github.com/BadgerCode/emojichat-html).
+## Setup for local development
+Clone this repository.<br>
+The folder [emojichat](/emojichat) should go in your Garry's Mod addons folder.
+
+I would recommend setting up a symbolic link `garrysmod/addons/emojichat-lua` -> `emojichat-repository/emojichat`.
+
+
+## HTML Chatbox Component
+* The files for this can be found in the `emojichat-html` directory
+* For the HTML chatbox, see the [README](/emojichat-html/README.md) in `emojichat-html`
+* Old commits can be found [here](https://github.com/BadgerCode/emojichat-html)
+
+
 
 
 
