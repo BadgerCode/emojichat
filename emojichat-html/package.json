@@ -1,5 +1,5 @@
 {
-  "name": "emojichat-html",
+  "name": "emojichat",
   "version": "1.0.0",
   "description": "HTML component of https://github.com/BadgerCode/emojichat",
   "scripts": {
@@ -16,14 +16,14 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BadgerCode/emojichat-html.git"
+    "url": "git+https://github.com/BadgerCode/emojichat.git"
   },
   "author": "badger@badgercode.co.uk",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BadgerCode/emojichat-html/issues"
+    "url": "https://github.com/BadgerCode/emojichat/issues"
   },
-  "homepage": "https://github.com/BadgerCode/emojichat-html#readme",
+  "homepage": "https://github.com/BadgerCode/emojichat",
   "babel": {
     "plugins": [
       "transform-object-rest-spread",
