@@ -2,6 +2,7 @@
 // JSON from https://github.com/muan/emojilib
 import emojis from "./emojis.json";
 import ordered from "./ordered.json";
+import { uniq } from 'lodash';
 
 export class EmojiOption {
     constructor(name, character){
@@ -42,7 +43,7 @@ export function search(keyword) {
         }
     })
 
-    result = _.uniq(result);
+    result = uniq(result);
 
     result.sort((a, b) => {
         return ordered[a] - ordered[b]
