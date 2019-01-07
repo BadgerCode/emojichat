@@ -1,24 +1,25 @@
-## Libraries used
+# Libraries used
 * https://demos.emojione.com/latest/jstoimage.html
 * https://github.com/muan/emojilib
 
-## Build for release
-```npm run build```
+# Build for release
+> ```npm run build```
 
-### Generating a new release URL
-**TODO**
+This compiles the web app and updates the `/emojichat/lua/emojichat/cl_html.lua` lua file.
 
 
-## Local development
-```npm start```
+# Local development
+> ```npm start```
 
-This will auto-recompile anytime a change is made to the app.
+This will do two things:
+* Start a website on http://localhost:8080/
+* Update the `/emojichat/lua/emojichat/cl_html.lua` lua file
 
-Set the lua to use localhost:8080
+Anytime the files in `src` are changed, the website and lua file will both be updated.
 
 ---
 
-### JS Console commands
+# JS Console commands
 
 **Active mode (full UI- input, chat log, etc.)**
 ```javascript
