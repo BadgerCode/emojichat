@@ -34,6 +34,7 @@ surface.CreateFont( "eChat_18", {
 
 function eChat.buildBox()
 	eChat.frame = vgui.Create("DFrame")
+	eChat.frame:MoveToBack()
 	eChat.frame:SetSize( ScrW()*0.375, ScrH()*0.25 )
 	eChat.frame:SetTitle("")
 	eChat.frame:ShowCloseButton( false )
@@ -120,6 +121,7 @@ function eChat.hideBox()
 	
 	eChat.frame:SetMouseInputEnabled( false )
 	eChat.frame:SetKeyboardInputEnabled( false )
+	eChat.frame:MoveToBack()
 	gui.EnableScreenClicker( false )
 	
 	eChat.Active = false
