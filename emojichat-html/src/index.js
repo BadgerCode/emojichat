@@ -37,7 +37,7 @@ export function setFadeTime(durationInSeconds) {
     State.FadeTimeSeconds = durationInSeconds;
 }
 
-export function setPlayerList(players) {
+export function reloadPlayerList(players) {
     State.PlayerList = players;
 }
 
@@ -53,6 +53,8 @@ export function setActive(destination) {
         var line = lines[i];
         line.classList.remove("inactive-line");
     }
+
+    LuaOutput.ReloadPlayerList()
 }
 
 export function setInactive() {

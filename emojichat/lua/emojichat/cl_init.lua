@@ -247,3 +247,7 @@ function eChat.UpdateFadeTime(durationInSeconds)
 
 	eChat.HTMLOutput:UpdateFadeTime(eChat.config.fadeTime)
 end
+
+function eChat.ReloadPlayerList()
+	eChat.HTMLOutput:ReloadPlayerList()
+end

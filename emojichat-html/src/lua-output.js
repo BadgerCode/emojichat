@@ -28,3 +28,7 @@ export function PlayWarningSound() {
 export function HideMenu() {
     console.log("RUNLUA:HTMLChatCallbacks.HideMenu()")
 }
+
+export function ReloadPlayerList() {
+    console.log("RUNLUA:HTMLChatCallbacks.ReloadPlayerList()")
+}
