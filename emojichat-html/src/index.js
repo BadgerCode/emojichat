@@ -5,6 +5,7 @@ import * as EmojiSuggestions from './component/emoji-suggestions.js';
 import * as LuaOutput from './lua-output.js';
 import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
+import { Chatbox } from './chatbox.js';
 
 const MAX_INPUT_BYTES = 126;
 
@@ -17,7 +18,8 @@ var Keys = {
     RightArrow: 39,
     DownArrow: 40,
     SingleQuote: 39,
-    BackTick: 96
+    BackTick: 96,
+    AtSymbol: 64
 };
 
 var currentLine = 0;
@@ -31,18 +33,9 @@ function Init() {
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
-
 // DOM
 function getOutputElement() {
     return document.getElementById("output");
-}
-
-function getInputWrapper() {
-    return document.getElementById("input");
-}
-
-function getInputBox() {
-    return document.getElementById("input-box");
 }
 
 
@@ -56,8 +49,7 @@ export function setActive(destination) {
 
     InputPrompt.SetDestination(destination);
     getOutputElement().style["overflow-y"] = "scroll";
-    getInputWrapper().style["display"] = "block";
-    getInputBox().focus();
+    Chatbox.SetInputActive();
     EmojiSuggestions.Hide();
 
     var lines = document.getElementsByClassName("line");
@@ -72,8 +64,7 @@ export function setInactive() {
     InputState.Reset();
 
     getOutputElement().style["overflow-y"] = "hidden";
-    getInputWrapper().style["display"] = "none";
-    getInputBox().value = "";
+    Chatbox.SetInputInactive();
     clearSelection();
     EmojiSuggestions.Hide();
 
@@ -125,7 +116,7 @@ function fadeOutLine(id) {
 }
 
 function CompleteInProgressEmoji() {
-    var inputBox = getInputBox();
+    var inputBox = Chatbox.InputBoxElement();
     var inputEmojiStatus = TextAnalyser.FindInProgressEmoji(inputBox.value, inputBox.selectionStart);
     if (!inputEmojiStatus.inProgress) {
         return;
@@ -146,7 +137,7 @@ function CompleteInProgressEmoji() {
 }
 
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("keyup", function (event) {
         var key = event.which || event.keyCode || 0;
         if (key === Keys.Enter) {
@@ -169,26 +160,26 @@ document.getElementById("body")
         }
     });
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("click", function (event) {
         InputState.UpdateCaretPosition(event.target.selectionStart);
     });
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("focus", function (event) {
         InputState.UpdateCaretPosition(event.target.selectionStart);
     });
 
-getInputBox()
-    .addEventListener("keypress", function(event){
+Chatbox.InputBoxElement()
+    .addEventListener("keypress", function (event) {
         var key = event.which || event.keyCode || 0;
-        if(key === Keys.BackTick || key === Keys.SingleQuote){
+        if (key === Keys.BackTick || key === Keys.SingleQuote || key === Keys.AtSymbol) {
             // https://github.com/Facepunch/garrysmod-issues/issues/1941
             LuaOutput.HideMenu()
         }
     });
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("keydown", function (event) {
         var key = event.which || event.keyCode || 0;
 
@@ -224,7 +215,7 @@ getInputBox()
         }
     });
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("paste", function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -257,7 +248,7 @@ getInputBox()
         triggerEvent(inputBox, "input");
     });
 
-getInputBox()
+Chatbox.InputBoxElement()
     .addEventListener("input", function (event) {
         if (!active) return;
 
