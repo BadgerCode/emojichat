@@ -43,6 +43,34 @@ class TextAnalyser {
             endPos: emojiRightEndExcl - 1
         };
     }
+
+    static FindInProgressPlayerName(currentText, currentPosition) {
+        var errorResponse = {
+            inProgress: false,
+            incompletePlayerName: ""
+        };
+
+        if (currentPosition <= 0 || currentPosition > currentText.length)
+            return errorResponse;
+
+        // left grab
+        var leftStartPosExcl = currentPosition - 1;
+        for (; leftStartPosExcl >= 0; leftStartPosExcl--) {
+            var currentChar = currentText.charAt(leftStartPosExcl);
+
+            if (currentChar === '@')
+                break;
+            if (leftStartPosExcl === 0)
+                return errorResponse;
+        }
+
+        return {
+            inProgress: true,
+            incompletePlayerName: currentText.substring(leftStartPosExcl + 1, currentPosition),
+            startPos: leftStartPosExcl,
+            endPos: currentPosition
+        };
+    }
 }
 
 
