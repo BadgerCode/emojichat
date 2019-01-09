@@ -8,13 +8,19 @@ class Chatbox {
     }
 
     static SetInputActive() {
+        Chatbox.OutputElement().style["overflow-y"] = "scroll";
         document.getElementById("input").style["display"] = "block";
         Chatbox.InputBoxElement().focus();
     }
 
     static SetInputInactive() {
+        Chatbox.OutputElement().style["overflow-y"] = "hidden";
         document.getElementById("input").style["display"] = "none";
         Chatbox.InputBoxElement().value = "";
+    }
+
+    static ScrollToBottom() {
+        Chatbox.OutputElement().scrollTop = Chatbox.OutputElement().scrollHeight;
     }
 }
 

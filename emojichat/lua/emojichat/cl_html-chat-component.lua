@@ -33,3 +33,8 @@ end
 function HTMLChatComponent.UpdateFadeTime(self, durationInSeconds)
 	self.htmlElement:QueueJavascript("emojiChat.setFadeTime(" .. durationInSeconds .. ")")
 end
+
+function HTMLChatComponent.SetPlayerList(self, playerList)
+	local json = string.JavascriptSafe(util.TableToJson(playerList))
+	self.htmlElement:QueueJavascript("emojiChat.setPlayerList('" .. json  .. "')")
+end

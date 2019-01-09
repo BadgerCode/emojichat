@@ -6,6 +6,7 @@ import * as LuaOutput from './lua-output.js';
 import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
 import { Chatbox } from './chatbox.js';
+import { State } from './state'
 
 const MAX_INPUT_BYTES = 126;
 
@@ -22,33 +23,28 @@ var Keys = {
     AtSymbol: 64
 };
 
-var currentLine = 0;
-var active = false;
-var fadeTimeSeconds = 5;
-
 function Init() {
-    scrollToBottom();
+    Chatbox.ScrollToBottom();
     InputPrompt.Reset();
     EmojiSuggestions.Reset();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
-// DOM
-function getOutputElement() {
-    return document.getElementById("output");
-}
 
 
 // Input
 export function setFadeTime(durationInSeconds) {
-    fadeTimeSeconds = durationInSeconds;
+    State.FadeTimeSeconds = durationInSeconds;
+}
+
+export function setPlayerList(players) {
+    State.PlayerList = players;
 }
 
 export function setActive(destination) {
-    active = true;
+    State.Active = true;
 
     InputPrompt.SetDestination(destination);
-    getOutputElement().style["overflow-y"] = "scroll";
     Chatbox.SetInputActive();
     EmojiSuggestions.Hide();
 
@@ -60,10 +56,9 @@ export function setActive(destination) {
 }
 
 export function setInactive() {
-    active = false;
+    State.Active = false;
     InputState.Reset();
 
-    getOutputElement().style["overflow-y"] = "hidden";
     Chatbox.SetInputInactive();
     clearSelection();
     EmojiSuggestions.Hide();
@@ -74,7 +69,7 @@ export function setInactive() {
         line.classList.add("inactive-line");
     }
 
-    scrollToBottom();
+    Chatbox.ScrollToBottom();
 }
 
 export function addOutput(rawTextComponents) {
@@ -88,17 +83,12 @@ export function addOutput(rawTextComponents) {
         formattedLine += "<span style=\"color: " + colour + "\">" + message + "</span>";
     }
 
-    var id = "line-" + (currentLine++);
-    getOutputElement().innerHTML += "<div id='" + id + "' class='line'>" + formattedLine + "</div>";
-    scrollToBottom();
+    var id = "line-" + (State.CurrentLine++);
+    Chatbox.OutputElement().innerHTML += "<div id='" + id + "' class='line'>" + formattedLine + "</div>";
+    Chatbox.ScrollToBottom();
     fadeOutLine(id);
 }
 
-
-// Logic
-function scrollToBottom() {
-    getOutputElement().scrollTop = getOutputElement().scrollHeight;
-}
 
 function clearSelection() {
     if (window.getSelection) { window.getSelection().removeAllRanges(); }
@@ -110,9 +100,9 @@ function fadeOutLine(id) {
         var element = document.getElementById(id)
         element.classList.add("faded-line");
 
-        if (!active)
+        if (!State.Active)
             element.classList.add("inactive-line");
-    }, fadeTimeSeconds * 1000);
+    }, State.FadeTimeSeconds * 1000);
 }
 
 function CompleteInProgressEmoji() {
@@ -250,7 +240,7 @@ Chatbox.InputBoxElement()
 
 Chatbox.InputBoxElement()
     .addEventListener("input", function (event) {
-        if (!active) return;
+        if (!State.Active) return;
 
         var inputBox = event.target;
         var newInput = inputBox.value;
