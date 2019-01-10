@@ -1,5 +1,9 @@
 var fs = require('fs');
 
+function LogInfo(message) { console.log('%s\n', message);}
+function LogSuccess(message) { console.log('\x1b[32m%s\x1b[0m\n', message);}
+function LogFailure(message) { console.log('\x1b[31m%s\x1b[0m\n', message);}
+
 const luaFile = '../emojichat/lua/emojichat/cl_html.lua';
 const htmlFile = './dist/index.html';
 
@@ -11,7 +15,7 @@ function UpdateLuaFile()
 {
     fs.readFile(htmlFile, 'utf8', function(err, contents) {
         if(err != null) {
-            console.log("LUA: error reading file");
+            LogFailure("LUA: error reading file");
             console.log(err);
         }
 
@@ -19,18 +23,18 @@ function UpdateLuaFile()
 
         fs.writeFile(luaFile, luaFileContents, function(err) {
             if(err != null) {
-                console.log("LUA: error writing file")
+                LogFailure("LUA: error writing file")
                 console.log(err);
             }
             else {
-                console.log("LUA: UPDATED cl_html.lua\n");
+                LogSuccess("LUA: UPDATED cl_html.lua");
             }
         });
     });
 }
 
 if(!fs.existsSync(htmlFile)) {
-    console.log("LUA-ERROR: HTML file not compiled!")
+    LogFailure("LUA-ERROR: HTML file not compiled!")
     process.exit();
     return;
 }
@@ -39,7 +43,7 @@ if(!fs.existsSync(htmlFile)) {
 if(watchForChanges) {
     var watcher = fs.watch(htmlFile, (event, filename) => {
         if (filename) {
-            console.log(`LUA: ${filename} file changed`);
+            LogInfo(`LUA: ${filename} file changed`);
             UpdateLuaFile();
         }
     });

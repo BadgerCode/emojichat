@@ -1,4 +1,4 @@
-import * as EmojiSuggestions from './component/emoji-suggestions.js';
+import * as Suggestions from './component/suggestions.js';
 
 var existingCaretPosition = 0;
 var existingText = "";
@@ -12,7 +12,7 @@ export function Reset() {
 
 export function UpdateCaretPosition(newPosition) {
     if (newPosition != existingCaretPosition) {
-        EmojiSuggestions.Hide();
+        Suggestions.Hide();
         existingCaretPosition = newPosition;
     }
 }

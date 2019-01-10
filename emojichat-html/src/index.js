@@ -1,12 +1,13 @@
-import { search } from './emoji-search.js';
+import * as EmojiSearch from './emoji-search.js';
+import * as PlayerNameSearch from './playername-search';
 import { TextAnalyser } from './text-analyser.js';
-import { replaceEmojisInText, colourToRGBA, byteLength, triggerEvent } from './utils.js';
-import * as EmojiSuggestions from './component/emoji-suggestions.js';
+import { replaceEmojisInText, colourToRGBA, byteLength, triggerEvent, convertEmoji } from './utils.js';
+import * as Suggestions from './component/suggestions.js';
 import * as LuaOutput from './lua-output.js';
 import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
 import { Chatbox } from './chatbox.js';
-import { State } from './state'
+import { State, SuggestionMode } from './state'
 
 const MAX_INPUT_BYTES = 126;
 
@@ -26,7 +27,7 @@ var Keys = {
 function Init() {
     Chatbox.ScrollToBottom();
     InputPrompt.Reset();
-    EmojiSuggestions.Reset();
+    Suggestions.Reset();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
@@ -38,7 +39,9 @@ export function setFadeTime(durationInSeconds) {
 }
 
 export function reloadPlayerList(players) {
-    State.PlayerList = players;
+    var playersCasted = JSON.parse(players);
+    playersCasted.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    State.PlayerList = playersCasted;
 }
 
 export function setActive(destination) {
@@ -46,7 +49,8 @@ export function setActive(destination) {
 
     InputPrompt.SetDestination(destination);
     Chatbox.SetInputActive();
-    EmojiSuggestions.Hide();
+    State.SuggestionMode = SuggestionMode.None;
+    Suggestions.Hide();
 
     var lines = document.getElementsByClassName("line");
     for (var i = 0; i < lines.length; i++) {
@@ -63,7 +67,8 @@ export function setInactive() {
 
     Chatbox.SetInputInactive();
     clearSelection();
-    EmojiSuggestions.Hide();
+    State.SuggestionMode = SuggestionMode.None;
+    Suggestions.Hide();
 
     var lines = document.getElementsByClassName("faded-line");
     for (var i = 0; i < lines.length; i++) {
@@ -114,7 +119,7 @@ function CompleteInProgressEmoji() {
         return;
     }
 
-    var emoji = EmojiSuggestions.GetSelectedEmoji();
+    var emoji = ":" + Suggestions.GetSelectedSuggestion().name + ": ";
 
     var currentInput = inputBox.value;
     var firstHalf = currentInput.substring(0, inputEmojiStatus.startPos);
@@ -123,6 +128,29 @@ function CompleteInProgressEmoji() {
     var newInput = firstHalf + emoji + secondHalf;
     var caretPosition = newInput.length - secondHalf.length;
 
+    State.SuggestionMode = SuggestionMode.None;
+    inputBox.value = newInput;
+    inputBox.setSelectionRange(caretPosition, caretPosition);
+    triggerEvent(inputBox, "input");
+}
+
+function CompleteInProgressPlayerName() {
+    var inputBox = Chatbox.InputBoxElement();
+    var status = TextAnalyser.FindInProgressPlayerName(inputBox.value, inputBox.selectionStart);
+    if (!status.inProgress) {
+        return;
+    }
+
+    var playerName = Suggestions.GetSelectedSuggestion().name + " ";
+
+    var currentInput = inputBox.value;
+    var firstHalf = currentInput.substring(0, status.startPos);
+    var secondHalf = currentInput.substring(status.endPos + 1, currentInput.length)
+
+    var newInput = firstHalf + playerName + secondHalf;
+    var caretPosition = newInput.length - secondHalf.length;
+
+    State.SuggestionMode = SuggestionMode.None;
     inputBox.value = newInput;
     inputBox.setSelectionRange(caretPosition, caretPosition);
     triggerEvent(inputBox, "input");
@@ -177,8 +205,11 @@ Chatbox.InputBoxElement()
 
         if (key === Keys.Tab) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
-                CompleteInProgressEmoji();
+            if (Suggestions.AreActive()) {
+                if(State.SuggestionMode == SuggestionMode.Emoji)
+                    CompleteInProgressEmoji();
+                else if(State.SuggestionMode == SuggestionMode.PlayerName)
+                    CompleteInProgressPlayerName();
             }
             else {
                 InputPrompt.SelectNextDestination();
@@ -186,20 +217,24 @@ Chatbox.InputBoxElement()
         }
         else if (key === Keys.UpArrow) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
-                EmojiSuggestions.ChangeSelection(-1);
+            if (Suggestions.AreActive()) {
+                Suggestions.ChangeSelection(-1);
             }
         }
         else if (key === Keys.DownArrow) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
-                EmojiSuggestions.ChangeSelection(1);
+            if (Suggestions.AreActive()) {
+                Suggestions.ChangeSelection(1);
             }
         }
         else if (key === Keys.Enter) {
-            if (EmojiSuggestions.AreActive()) {
+            if (Suggestions.AreActive() && State.SuggestionMode != SuggestionMode.None) {
                 InputState.IgnoreNextEnterRelease();
-                CompleteInProgressEmoji();
+
+                if(State.SuggestionMode == SuggestionMode.Emoji)
+                    CompleteInProgressEmoji();
+                else if(State.SuggestionMode == SuggestionMode.PlayerName)
+                    CompleteInProgressPlayerName();
             }
         }
         else {
@@ -257,17 +292,42 @@ Chatbox.InputBoxElement()
 
         InputState.SetText(newInput);
 
-        // When adding characters, awesomium incorrectly reports the current position to be 1 less than it actually is
-        var inputEmojiStatus = TextAnalyser.FindInProgressEmoji(inputBox.value, inputBox.selectionStart);
-        if (inputEmojiStatus.inProgress) {
-            var possibleEmojis = search(inputEmojiStatus.incompleteEmojiCode);
+        if (State.SuggestionMode === SuggestionMode.PlayerName || State.SuggestionMode === SuggestionMode.None) {
+            var inputPlayerNameStatus = TextAnalyser.FindInProgressPlayerName(inputBox.value, inputBox.selectionStart);
+            if(inputPlayerNameStatus.inProgress) {
+                var possiblePlayers = PlayerNameSearch.search(State.PlayerList, inputPlayerNameStatus.incompletePlayerName);
 
-            if (possibleEmojis.length > 0) {
-                EmojiSuggestions.Show(possibleEmojis);
+                if (possiblePlayers.length > 0) {
+                    Suggestions.Show(possiblePlayers, suggestion => suggestion.name);
+                    State.SuggestionMode = SuggestionMode.PlayerName;
+                }
+                else {
+                    State.SuggestionMode = SuggestionMode.None;
+                }
+            }
+            else {
+                Suggestions.Hide();
+                State.SuggestionMode = SuggestionMode.None;
             }
         }
-        else {
-            EmojiSuggestions.Hide();
+        if (State.SuggestionMode === SuggestionMode.Emoji || State.SuggestionMode === SuggestionMode.None) {
+            // When adding characters, awesomium incorrectly reports the current position to be 1 less than it actually is
+            var inputEmojiStatus = TextAnalyser.FindInProgressEmoji(inputBox.value, inputBox.selectionStart);
+            if (inputEmojiStatus.inProgress) {
+                var possibleEmojis = EmojiSearch.search(inputEmojiStatus.incompleteEmojiCode);
+
+                if (possibleEmojis.length > 0) {
+                    Suggestions.Show(possibleEmojis, suggestion => convertEmoji(suggestion.char) + " &nbsp; :" + suggestion.name + ":");
+                    State.SuggestionMode = SuggestionMode.Emoji;
+                }
+                else {
+                    State.SuggestionMode = SuggestionMode.None;
+                }
+            }
+            else {
+                Suggestions.Hide();
+                State.SuggestionMode = SuggestionMode.None;
+            }
         }
 
         LuaOutput.InputChangeCallback(newInput);

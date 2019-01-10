@@ -188,4 +188,59 @@ describe('TextAnalyser', function () {
             });
         });
     });
+
+    describe('FindInProgressPlayerName', function () {
+        it('Given the cursor is at the start of a string', function () {
+            var result = TextAnalyser.FindInProgressPlayerName("@bad", 0);
+
+            expect(result.inProgress).toEqual(false);
+            expect(result.incompletePlayerName).toEqual("");
+        });
+
+        describe('In progress player name', function () {
+            it('Given a cursor position after the @', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("@OTHER TEXT", 1);
+
+                expect(result.inProgress).toEqual(true);
+                expect(result.incompletePlayerName).toEqual("");
+            });
+
+            it('Given text after the cusor position', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("@bOTHER TEXT", 2);
+
+                expect(result.inProgress).toEqual(true);
+                expect(result.incompletePlayerName).toEqual("b");
+            });
+
+            it('Given a cursor position at the end of the string', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("@bad", 4);
+
+                expect(result.inProgress).toEqual(true);
+                expect(result.incompletePlayerName).toEqual("bad");
+            });
+
+            it('Given a space and a colon in a player name', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("OTHER TEXT@b:ad gerOTHER TEXT", 19);
+
+                expect(result.inProgress).toEqual(true);
+                expect(result.incompletePlayerName).toEqual("b:ad ger");
+            });
+        });
+
+        describe("Bad current positions", function () {
+            it('Given a current position before the start of the string', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("@badger", -1);
+
+                expect(result.inProgress).toEqual(false);
+                expect(result.incompletePlayerName).toEqual("");
+            });
+
+            it('Given a current position after the end of the string', function () {
+                var result = TextAnalyser.FindInProgressPlayerName("@badger", 8);
+
+                expect(result.inProgress).toEqual(false);
+                expect(result.incompletePlayerName).toEqual("");
+            });
+        });
+    });
 });
