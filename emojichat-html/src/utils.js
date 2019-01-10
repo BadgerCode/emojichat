@@ -1,9 +1,22 @@
+import * as emojilib from "emojilib";
+import twemoji from "twemoji";
+
+const emojiRegex = new RegExp(":([^ :]+):", "gi");
+
 export function convertEmoji(emoji) {
-    return emojione.unicodeToImage(emoji);
+    return twemoji.parse(emoji);
 }
 
 export function replaceEmojisInText(text) {
-    return emojione.toImage(text);
+    var replacedEmojis = text.replace(emojiRegex, function(fullMatch, shortname) {
+        if( (typeof shortname === 'undefined') || (shortname === '') || (typeof(emojilib.lib[shortname]) === "undefined") ) {
+            return fullMatch;
+        }
+        else {
+            return emojilib.lib[shortname]["char"];
+        }
+    });
+    return twemoji.parse(replacedEmojis);
 }
 
 export function colourToRGBA(colour) {

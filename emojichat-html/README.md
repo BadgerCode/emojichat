@@ -1,6 +1,6 @@
 # Libraries used
-* https://demos.emojione.com/latest/jstoimage.html
-* https://github.com/muan/emojilib
+* [Twemoji](https://github.com/twitter/twemoji) for Twitter emoji icons
+* [Emojilib](https://github.com/muan/emojilib) for emoji shortcodes
 
 # Build for release
 > ```npm run build```

@@ -1,7 +1,5 @@
 // Code from https://github.com/muan/emoji-search
-// JSON from https://github.com/muan/emojilib
-import emojis from "./emojis.json";
-import ordered from "./ordered.json";
+import * as emojilib from "emojilib";
 import { uniq } from 'lodash';
 
 export class EmojiOption {
@@ -13,10 +11,10 @@ export class EmojiOption {
 
 const buildIndex = () => {
     const map = {}
-    Object.keys(emojis).forEach(key => {
-        if (!emojis[key]["char"]) { return }
+    Object.keys(emojilib.lib).forEach(key => {
+        if (!emojilib.lib[key]["char"]) { return }
 
-        const words = emojis[key]["keywords"]
+        const words = emojilib.lib[key]["keywords"]
         words.push(key)
 
         words.forEach(word => {
@@ -46,7 +44,7 @@ export function search(keyword) {
     result = uniq(result);
 
     result.sort((a, b) => {
-        return ordered[a] - ordered[b]
+        return emojilib.ordered[a] - emojilib.ordered[b]
     })
 
     // Move exact match to the first
@@ -55,5 +53,5 @@ export function search(keyword) {
         result.unshift(keyword)
     }
 
-    return result.map(k => new EmojiOption(k, emojis[k]["char"]));
+    return result.map(k => new EmojiOption(k, emojilib.lib[k]["char"]));
 }

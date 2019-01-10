@@ -61,6 +61,8 @@
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "concurrently": "^4.1.0",
-    "lodash": "^4.17.11"
+    "emojilib": "^2.4.0",
+    "lodash": "^4.17.11",
+    "twemoji": "^11.2.0"
   }
 }
