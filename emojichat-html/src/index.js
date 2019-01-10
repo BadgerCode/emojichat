@@ -2,7 +2,7 @@ import * as EmojiSearch from './emoji-search.js';
 import * as PlayerNameSearch from './playername-search';
 import { TextAnalyser } from './text-analyser.js';
 import { replaceEmojisInText, colourToRGBA, byteLength, triggerEvent, convertEmoji } from './utils.js';
-import * as EmojiSuggestions from './component/emoji-suggestions.js';
+import * as Suggestions from './component/suggestions.js';
 import * as LuaOutput from './lua-output.js';
 import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
@@ -27,7 +27,7 @@ var Keys = {
 function Init() {
     Chatbox.ScrollToBottom();
     InputPrompt.Reset();
-    EmojiSuggestions.Reset();
+    Suggestions.Reset();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
@@ -50,7 +50,7 @@ export function setActive(destination) {
     InputPrompt.SetDestination(destination);
     Chatbox.SetInputActive();
     State.SuggestionMode = SuggestionMode.None;
-    EmojiSuggestions.Hide();
+    Suggestions.Hide();
 
     var lines = document.getElementsByClassName("line");
     for (var i = 0; i < lines.length; i++) {
@@ -68,7 +68,7 @@ export function setInactive() {
     Chatbox.SetInputInactive();
     clearSelection();
     State.SuggestionMode = SuggestionMode.None;
-    EmojiSuggestions.Hide();
+    Suggestions.Hide();
 
     var lines = document.getElementsByClassName("faded-line");
     for (var i = 0; i < lines.length; i++) {
@@ -119,7 +119,7 @@ function CompleteInProgressEmoji() {
         return;
     }
 
-    var emoji = ":" + EmojiSuggestions.GetSelectedSuggestion().name + ": ";
+    var emoji = ":" + Suggestions.GetSelectedSuggestion().name + ": ";
 
     var currentInput = inputBox.value;
     var firstHalf = currentInput.substring(0, inputEmojiStatus.startPos);
@@ -141,7 +141,7 @@ function CompleteInProgressPlayerName() {
         return;
     }
 
-    var playerName = EmojiSuggestions.GetSelectedSuggestion().name + " ";
+    var playerName = Suggestions.GetSelectedSuggestion().name + " ";
 
     var currentInput = inputBox.value;
     var firstHalf = currentInput.substring(0, status.startPos);
@@ -205,7 +205,7 @@ Chatbox.InputBoxElement()
 
         if (key === Keys.Tab) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
+            if (Suggestions.AreActive()) {
                 if(State.SuggestionMode == SuggestionMode.Emoji)
                     CompleteInProgressEmoji();
                 else if(State.SuggestionMode == SuggestionMode.PlayerName)
@@ -217,18 +217,18 @@ Chatbox.InputBoxElement()
         }
         else if (key === Keys.UpArrow) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
-                EmojiSuggestions.ChangeSelection(-1);
+            if (Suggestions.AreActive()) {
+                Suggestions.ChangeSelection(-1);
             }
         }
         else if (key === Keys.DownArrow) {
             event.preventDefault();
-            if (EmojiSuggestions.AreActive()) {
-                EmojiSuggestions.ChangeSelection(1);
+            if (Suggestions.AreActive()) {
+                Suggestions.ChangeSelection(1);
             }
         }
         else if (key === Keys.Enter) {
-            if (EmojiSuggestions.AreActive() && State.SuggestionMode != SuggestionMode.None) {
+            if (Suggestions.AreActive() && State.SuggestionMode != SuggestionMode.None) {
                 InputState.IgnoreNextEnterRelease();
 
                 if(State.SuggestionMode == SuggestionMode.Emoji)
@@ -298,7 +298,7 @@ Chatbox.InputBoxElement()
                 var possiblePlayers = PlayerNameSearch.search(State.PlayerList, inputPlayerNameStatus.incompletePlayerName);
 
                 if (possiblePlayers.length > 0) {
-                    EmojiSuggestions.Show(possiblePlayers, suggestion => suggestion.name);
+                    Suggestions.Show(possiblePlayers, suggestion => suggestion.name);
                     State.SuggestionMode = SuggestionMode.PlayerName;
                 }
                 else {
@@ -306,7 +306,7 @@ Chatbox.InputBoxElement()
                 }
             }
             else {
-                EmojiSuggestions.Hide();
+                Suggestions.Hide();
                 State.SuggestionMode = SuggestionMode.None;
             }
         }
@@ -317,7 +317,7 @@ Chatbox.InputBoxElement()
                 var possibleEmojis = EmojiSearch.search(inputEmojiStatus.incompleteEmojiCode);
 
                 if (possibleEmojis.length > 0) {
-                    EmojiSuggestions.Show(possibleEmojis, suggestion => convertEmoji(suggestion.char) + " &nbsp; :" + suggestion.name + ":");
+                    Suggestions.Show(possibleEmojis, suggestion => convertEmoji(suggestion.char) + " &nbsp; :" + suggestion.name + ":");
                     State.SuggestionMode = SuggestionMode.Emoji;
                 }
                 else {
@@ -325,7 +325,7 @@ Chatbox.InputBoxElement()
                 }
             }
             else {
-                EmojiSuggestions.Hide();
+                Suggestions.Hide();
                 State.SuggestionMode = SuggestionMode.None;
             }
         }
