@@ -80,6 +80,24 @@
             background: rgba(128, 128, 255, 0.5);
         }
 
+        .suggestion-up, .suggestion-down, .suggestion-select {
+            display: none;
+            float: right;
+            margin-right: 20px;
+            background: #aaa;
+            width: 70px;
+            text-align: center;
+            color: black;
+            text-shadow: none;
+            border-radius: 23px;
+            font-size: 0.8em;
+            margin-top: 2px;
+        }
+
+        .previous-suggestion .suggestion-up, .next-suggestion .suggestion-down, .selected-suggestion .suggestion-select {
+            display: inline-block;
+        }
+
         #input {
             position: absolute;
             bottom: 0;
