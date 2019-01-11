@@ -49,6 +49,7 @@ export function setActive(destination, jsonPlayerList, jsonActivePlayer) {
     State.PlayerList = playerList;
 
     InputPrompt.SetDestination(destination);
+    InputPrompt.SetActivePlayerName(State.ActivePlayer.name);
     Chatbox.SetInputActive();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();

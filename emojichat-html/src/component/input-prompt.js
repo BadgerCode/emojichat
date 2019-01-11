@@ -11,10 +11,16 @@ TextPrompts[TextDestination.Console] = "Console :";
 
 
 var textDestination = TextDestination.Global;
+var activePlayerName = "player";
 
 export function SetDestination(destination) {
     textDestination = destination || TextDestination.Global;
     RenderInputPrefix();
+}
+
+export function SetActivePlayerName(name) {
+    activePlayerName = name;
+    RenderInputBox();
 }
 
 export function SelectNextDestination() {
@@ -46,6 +52,10 @@ function getInputPrompt() {
     return document.getElementById("input-prompt");
 }
 
+function getInputBox() {
+    return document.getElementById("input-box");
+}
+
 function RenderInputPrefix() {
     var message = TextPrompts[textDestination];
 
@@ -55,4 +65,8 @@ function RenderInputPrefix() {
         var leftMargin = getInputPrompt().offsetWidth + 10;
         getInputBoxWrapper().style.left = leftMargin + "px";
     }, 10);
+}
+
+function RenderInputBox() {
+    getInputBox().placeholder = ":wave: @" + activePlayerName;
 }
