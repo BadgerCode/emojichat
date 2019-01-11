@@ -9,6 +9,7 @@ const SuggestionMode = {
 
 class State { }
 
+State.ActivePlayer = {};
 State.PlayerList = [];
 State.CurrentLine = 0;
 State.Active = false;

@@ -23,7 +23,20 @@ function HTMLChatComponent.SetActive(self, chatMode)
 		desination = DESTINATION_TEAM
 	end
 
-	self.htmlElement:QueueJavascript("emojiChat.setActive(" .. desination .. ")")
+	local playerList = {}
+	for k, ply in pairs(player.GetAll()) do
+		local playerViewModel = { name = ply:Nick() }
+		table.insert(playerList, playerViewModel)
+	end
+
+	local activePlayer = {
+		name = LocalPlayer():Nick()
+	}
+
+	local jsonPlayerList = string.JavascriptSafe(util.TableToJSON(playerList))
+	local jsonActivePlayer = string.JavascriptSafe(util.TableToJSON(activePlayer))
+
+	self.htmlElement:QueueJavascript("emojiChat.setActive(" .. desination .. ",'" .. jsonPlayerList .. "', '" .. jsonActivePlayer .. "')")
 end
 
 function HTMLChatComponent.SetInactive(self)

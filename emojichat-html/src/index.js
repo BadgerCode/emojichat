@@ -38,14 +38,15 @@ export function setFadeTime(durationInSeconds) {
     State.FadeTimeSeconds = durationInSeconds;
 }
 
-export function reloadPlayerList(players) {
-    var playersCasted = JSON.parse(players);
-    playersCasted.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-    State.PlayerList = playersCasted;
-}
+export function setActive(destination, jsonPlayerList, jsonActivePlayer) {
+    var playerList = JSON.parse(jsonPlayerList);
+    var activePlayer = JSON.parse(jsonActivePlayer);
 
-export function setActive(destination) {
     State.Active = true;
+    State.ActivePlayer = activePlayer;
+
+    playerList.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    State.PlayerList = playerList;
 
     InputPrompt.SetDestination(destination);
     Chatbox.SetInputActive();
@@ -57,8 +58,6 @@ export function setActive(destination) {
         var line = lines[i];
         line.classList.remove("inactive-line");
     }
-
-    LuaOutput.ReloadPlayerList()
 }
 
 export function setInactive() {

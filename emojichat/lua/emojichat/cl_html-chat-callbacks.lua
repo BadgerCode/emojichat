@@ -35,7 +35,3 @@ end
 function HTMLChatCallbacks.HideMenu()
     gui.HideGameUI()
 end
-
-function HTMLChatCallbacks.ReloadPlayerList()
-	eChat.ReloadPlayerList()
-end
