@@ -5,19 +5,32 @@ _Alpha 0.1.2_
 
 ## Emojis!
 
-![Preview image](https://i.imgur.com/N0HpYcE.jpg)
-> https://i.gyazo.com/c49aae37b367e714f20990b9ea599966.mp4
+![Emojis image](https://i.imgur.com/azcGqAk.png)
 
-### Emoji suggestions & completion
+## Emoji suggestions & completion
 
-![emoji completion preview](https://i.imgur.com/ZRzpQQy.jpg)
-> https://i.gyazo.com/26d270c1c14a6ca4fb652ccfdd75caee.mp4
+![Emoji completion image](https://i.gyazo.com/dd456c6640b598099c50df8ef7ba5d85.gif)
 
 
-* When emoji suggestions appear, use the up and down arrow to change which one is selected
-* Press TAB to insert the text code for the emoji you wish to use
+## Player name completion
+![Player name completion image](https://i.gyazo.com/5023042fa32332d4756fd4a4ff13e2e0.gif)
 
+# Additional features
+### Emoji 11
+* All emojis in the Unicode standard are supported, including emoji 11
+* [Supported emojis](https://emojipedia.org/)
+* [New Emoji 11 emojis](https://emojipedia.org/unicode-11.0/)
 
+### Console mode
+* Send console commands from chat.
+* Press `TAB` to change between `Global`, `Team` and `Console` chat
+
+### Timestamps
+* See the exact time a message was sent
+
+<br><br><br>
+
+---
 
 # Developer Guide
 ## Setup for local development
