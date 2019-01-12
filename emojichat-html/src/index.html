@@ -71,6 +71,7 @@
 
         .suggestion-item {
             padding-left: 10px;
+            position: relative;
         }
 
         .selected-suggestion {
@@ -78,17 +79,37 @@
         }
 
         .suggestion-up, .suggestion-down, .suggestion-select {
+            position: absolute;
+            right: 0;
             display: none;
-            float: right;
-            margin-right: 20px;
             background: #aaa;
-            width: 70px;
             text-align: center;
             color: black;
             text-shadow: none;
-            border-radius: 23px;
+            border-radius: 4px;
             font-size: 0.8em;
-            margin-top: 2px;
+            border-right: 2px solid #777;
+            border-bottom: 2px solid #777;
+            border-top: 2px solid #ddd;
+            border-left: 2px solid #ddd;
+        }
+
+        .suggestion-select {
+            width: 70px;
+            top: 0;
+        }
+
+        .suggestion-up, .suggestion-down {
+            width: 18px;
+            right: 26px;
+        }
+
+        .suggestion-up {
+            top: -2px;
+        }
+
+        .suggestion-down {
+            top: 2px;
         }
 
         .previous-suggestion .suggestion-up, .next-suggestion .suggestion-down, .selected-suggestion .suggestion-select {
