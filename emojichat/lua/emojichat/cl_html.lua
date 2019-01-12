@@ -4,9 +4,6 @@ eChat.config.html = [===[
 
 <head>
     <meta charset="UTF-8" />
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
-        crossorigin="anonymous">
     <style>
         body {
             background-color: transparent;
@@ -123,6 +120,25 @@ eChat.config.html = [===[
             padding: 0;
             border: 0;
             width: 100%;
+        }
+
+        /* From Bootstrap */
+        body {
+            font-size: 1rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+        button, input {
+            overflow: visible;
+        }
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        *, ::after, ::before {
+            box-sizing: border-box;
         }
     </style>
 </head>

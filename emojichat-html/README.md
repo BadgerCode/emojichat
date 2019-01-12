@@ -21,6 +21,12 @@ Anytime the files in `src` are changed, the website and lua file will both be up
 
 # JS Console commands
 
+**Set background to black**
+This will make it easier to see the chat (in-game, the background is transparent).
+```javascript
+document.getElementsByTagName("body")[0].style.background = "black"
+```
+
 **Active mode (full UI- input, chat log, etc.)**
 ```javascript
 // emojiChat.setActive(chat mode, JSON list of players, JSON active player)
