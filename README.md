@@ -9,11 +9,11 @@ _Alpha 0.1.2_
 
 ## Emoji suggestions & completion
 
-![Emoji completion image](https://i.gyazo.com/dd456c6640b598099c50df8ef7ba5d85.gif)
+![Emoji completion image](https://i.imgur.com/YLAvtWk.gif)
 
 
 ## Player name completion
-![Player name completion image](https://i.gyazo.com/5023042fa32332d4756fd4a4ff13e2e0.gif)
+![Player name completion image](https://i.imgur.com/QIDZkwH.gif)
 
 # Additional features
 ### Emoji 11
@@ -28,6 +28,16 @@ _Alpha 0.1.2_
 ### Timestamps
 * See the exact time a message was sent
 
+### Default chat behaviour
+This chatbox has been made to behave similar to the default Garry's Mod chat
+* `ESC` will exit the chat (but not open the main menu)
+* Your `console key` will not open console when typing
+* Pressing `ENTER` when you have not typed anything will close the chatbox and will not send an empty message
+* Old messages will disappear when the chatbox is not open
+* Copy & paste works
+* Attempting to type a message which is too long will play an alert sound and trim your message
+* Emojis are shown as plaintext (e.g. `:fox_face:`) in console & logs
+
 <br><br><br>
 
 ---
@@ -38,8 +48,13 @@ _Alpha 0.1.2_
 All of the emojis you use on Twitter, Facebook, Discord (_non-custom emojis_), WhatsApp, etc. are available.<br>
 [See the full list here](https://emojipedia.org/).
 
+This chatbox also attempts to behave like the default Garry's Mod chatbox to avoid confusing users.
+
 ## Does this work when offline?
 Everything apart from the emojis will work when you are offline. Emojis will show as squares.
+
+## I have found a bug or I would like a feature added
+Let me know! Submit an issue/feature request on [GitHub](https://github.com/BadgerCode/emojichat/issues).
 
 <br><br><br>
 
