@@ -1,5 +1,5 @@
 # Garry's Mod Emoji Chat
-_Alpha 0.1.2_
+_Version 1.0.1_
 
 # Features
 

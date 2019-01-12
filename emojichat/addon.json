@@ -1,0 +1,13 @@
+{
+    "title": "EmojiChat",
+    "description": "A chatbox which supports emojis",
+    "type": "ServerContent",
+    "tags": [
+        "fun",
+        "comic"
+    ],
+    "ignore": [
+        ".git/*",
+        "README.md"
+    ]
+}
