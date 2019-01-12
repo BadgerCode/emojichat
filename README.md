@@ -1,5 +1,7 @@
 # Garry's Mod Emoji Chat
-_Version 1.0.1_
+_Version 1.0.1_<br>
+https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878
+
 
 # Features
 
@@ -54,10 +56,12 @@ This chatbox also attempts to behave like the default Garry's Mod chatbox to avo
 Everything apart from the emojis will work when you are offline. Emojis will show as squares.
 
 ## I have found a bug or I would like a feature added
-Let me know! Submit an issue/feature request on [GitHub](https://github.com/BadgerCode/emojichat/issues).
+Let me know! Submit an issue/feature request on [GitHub](https://github.com/BadgerCode/emojichat/issues).<br>
+Or comment on the [workshop addon](https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878).
 
 ## Help! This addon doesn't work with another chat addon
-Let me know - [GitHub](https://github.com/BadgerCode/emojichat/issues)
+Let me know - [GitHub](https://github.com/BadgerCode/emojichat/issues)<br>
+Or comment on the [workshop addon](https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878).
 
 <br><br><br>
 
