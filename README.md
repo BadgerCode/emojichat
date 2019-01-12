@@ -32,6 +32,19 @@ _Alpha 0.1.2_
 
 ---
 
+
+# Questions
+## What makes this different from other chat boxes with emojis?
+All of the emojis you use on Twitter, Facebook, Discord (_non-custom emojis_), WhatsApp, etc. are available.<br>
+[See the full list here](https://emojipedia.org/).
+
+## Does this work when offline?
+Everything apart from the emojis will work when you are offline. Emojis will show as squares.
+
+<br><br><br>
+
+---
+
 # Developer Guide
 ## Setup for local development
 Clone this repository.<br>
