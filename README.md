@@ -56,6 +56,9 @@ Everything apart from the emojis will work when you are offline. Emojis will sho
 ## I have found a bug or I would like a feature added
 Let me know! Submit an issue/feature request on [GitHub](https://github.com/BadgerCode/emojichat/issues).
 
+## Help! This addon doesn't work with another chat addon
+Let me know - [GitHub](https://github.com/BadgerCode/emojichat/issues)
+
 <br><br><br>
 
 ---
