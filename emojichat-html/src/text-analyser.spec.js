@@ -125,11 +125,18 @@ describe('TextAnalyser', function () {
                 expect(result.incompleteEmojiCode).toEqual("badger");
             });
 
-            it('Given the : is preceeded by text', function () {
-                var result = TextAnalyser.FindInProgressEmoji("junk:badger", 11);
+            it('Given the : is preceeded by text and whitespace', function () {
+                var result = TextAnalyser.FindInProgressEmoji("junk :badger", 12);
 
                 expect(result.inProgress).toEqual(true);
                 expect(result.incompleteEmojiCode).toEqual("badger");
+            });
+
+            it('Given the : is preceeded by just text', function () {
+                var result = TextAnalyser.FindInProgressEmoji("junk:badger", 11);
+
+                expect(result.inProgress).toEqual(false);
+                expect(result.incompleteEmojiCode).toEqual("");
             });
         });
 

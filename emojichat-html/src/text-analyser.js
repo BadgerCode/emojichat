@@ -36,6 +36,9 @@ class TextAnalyser {
         if (emojiLeftStartExcl + 1 >= emojiRightEndExcl)
             return errorResponse;
 
+        if (emojiLeftStartExcl !== 0 && currentText.charAt(emojiLeftStartExcl - 1) !== ' ')
+            return errorResponse;
+
         return {
             inProgress: true,
             incompleteEmojiCode: currentText.substring(emojiLeftStartExcl + 1, emojiRightEndExcl),
