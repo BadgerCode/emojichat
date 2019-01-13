@@ -27,6 +27,10 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878
 * Send console commands from chat.
 * Press `TAB` to change between `Global`, `Team` and `Console` chat
 
+### Clickable URLs
+* Any URLs in text are automatically made clickable
+* Clicking on the URL opens it in the Steam overlay browser
+
 ### Timestamps
 * See the exact time a message was sent
 
