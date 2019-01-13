@@ -7,15 +7,15 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878
 
 ## Emojis!
 
-![Emojis image](https://i.imgur.com/azcGqAk.png)
+![Emojis image](https://i.imgur.com/AWlPXME.png)
 
 ## Emoji suggestions & completion
 
-![Emoji completion image](https://i.imgur.com/YLAvtWk.gif)
+![Emoji completion image](https://i.imgur.com/Li2itrr.gif)
 
 
 ## Player name completion
-![Player name completion image](https://i.imgur.com/QIDZkwH.gif)
+![Player name completion image](https://i.imgur.com/FO9LYBD.gif)
 
 # Additional features
 ### Emoji 11
