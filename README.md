@@ -85,5 +85,7 @@ I would recommend setting up a symbolic link `garrysmod/addons/emojichat-lua` ->
 
 
 # Credits
+* Emoji images provided by [twemoji](https://github.com/twitter/twemoji)
+* Emoji categories and tags provided by [Emojilib](https://github.com/muan/emojilib)
 * eChat used as a starting point- https://github.com/Exho1/eChat/
 * Blur function created by Chessnut from NutScript
