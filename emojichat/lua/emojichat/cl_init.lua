@@ -15,7 +15,7 @@ eChat.config = {
 	position = 1,	
 	fadeTime = 12,
 	defaultChatColour = Color(255, 255, 255, 255),
-	timestampColour = Color(130, 130, 130, 255),
+	timestampColour = Color(255, 255, 255, 255),
 	serverMessageColour = Color(151, 211, 255, 255)
 }
 

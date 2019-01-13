@@ -19,6 +19,7 @@ eChat.config.html = [===[
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             font-weight: 700;
             text-shadow: 0 0 2px black;
+            letter-spacing: 1px;
         }
 
         .emoji {
