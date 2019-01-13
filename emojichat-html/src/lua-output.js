@@ -28,3 +28,7 @@ export function PlayWarningSound() {
 export function HideMenu() {
     console.log("RUNLUA:HTMLChatCallbacks.HideMenu()")
 }
+
+export function OpenURL(url) {
+    console.log("RUNLUA:HTMLChatCallbacks.OpenURL('" + url + "')")
+}

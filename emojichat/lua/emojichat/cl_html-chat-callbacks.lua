@@ -35,3 +35,8 @@ end
 function HTMLChatCallbacks.HideMenu()
     gui.HideGameUI()
 end
+
+function HTMLChatCallbacks.OpenURL(url)
+	gui.OpenURL(url)
+	HTMLChatCallbacks.CloseChat()
+end

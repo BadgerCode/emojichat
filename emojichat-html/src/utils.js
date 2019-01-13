@@ -2,6 +2,23 @@ import * as emojilib from "emojilib";
 import twemoji from "twemoji";
 
 const emojiRegex = new RegExp(":([^ :]+):", "gi");
+const urlRegex = new RegExp("https?:\/\/[^ ]+\.[^ ]+", "gi");
+
+String.prototype.chain = function(stringFunc) {
+    return stringFunc(this);
+}
+
+export function preProcessTextForOutput(text) {
+    return _.escape(text)
+        .chain(convertURLs)
+        .chain(replaceEmojisInText);
+}
+
+export function convertURLs(text) {
+    return text.replace(urlRegex, function(fullMatch) {
+        return "<a onclick=\"emojiChat.openURL('" + fullMatch + "');\">" + fullMatch + "</a>";
+    });
+}
 
 export function convertEmoji(emoji) {
     return twemoji.parse(emoji);

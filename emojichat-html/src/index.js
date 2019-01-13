@@ -1,7 +1,7 @@
 import * as EmojiSearch from './emoji-search.js';
 import * as PlayerNameSearch from './playername-search';
 import { TextAnalyser } from './text-analyser.js';
-import { replaceEmojisInText, colourToRGBA, byteLength, triggerEvent, convertEmoji } from './utils.js';
+import { colourToRGBA, byteLength, triggerEvent, convertEmoji, preProcessTextForOutput } from './utils.js';
 import * as Suggestions from './component/suggestions.js';
 import * as LuaOutput from './lua-output.js';
 import * as InputState from './input-state.js';
@@ -31,6 +31,10 @@ function Init() {
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
+
+export function openURL(url) {
+    LuaOutput.OpenURL(url);
+}
 
 
 // Input
@@ -86,7 +90,7 @@ export function addOutput(rawTextComponents) {
     for (var i = 0; i < textComponents.length; i++) {
         var component = textComponents[i];
         var colour = colourToRGBA(component.colour);
-        var message = replaceEmojisInText(_.escape(component.text));
+        var message = preProcessTextForOutput(component.text);
         formattedLine += "<span style=\"color: " + colour + "\">" + message + "</span>";
     }
 
