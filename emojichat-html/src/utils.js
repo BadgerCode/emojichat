@@ -1,8 +1,8 @@
 import * as emojilib from "emojilib";
 import twemoji from "twemoji";
 
-const emojiRegex = new RegExp(":([^ :]+):", "gi");
-const urlRegex = new RegExp("https?:\/\/[^ ]+\.[^ ]+", "gi");
+const emojiRegex = ":([^ :]+):";
+const urlRegex = "https?:\\/\\/[^ ]+\\.[^ ]+";
 
 String.prototype.chain = function(stringFunc) {
     return stringFunc(this);
@@ -15,7 +15,7 @@ export function preProcessTextForOutput(text) {
 }
 
 export function convertURLs(text) {
-    return text.replace(urlRegex, function(fullMatch) {
+    return text.replace(new RegExp(urlRegex, "gi"), function(fullMatch) {
         return "<a onclick=\"emojiChat.openURL('" + fullMatch + "');\">" + fullMatch + "</a>";
     });
 }
@@ -25,7 +25,7 @@ export function convertEmoji(emoji) {
 }
 
 export function replaceEmojisInText(text) {
-    var replacedEmojis = text.replace(emojiRegex, function(fullMatch, shortname) {
+    var replacedEmojis = text.replace(new RegExp(emojiRegex, "gi"), function(fullMatch, shortname) {
         if( (typeof shortname === 'undefined') || (shortname === '') || (typeof(emojilib.lib[shortname]) === "undefined") ) {
             return fullMatch;
         }
