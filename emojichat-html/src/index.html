@@ -127,7 +127,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 17px;
+            right: 19px;
             height: 25px;
             display: none;
         }
@@ -136,7 +136,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
+            right: 26px;
         }
 
         #input-box {
@@ -147,6 +147,20 @@
             padding: 0;
             border: 0;
             width: 100%;
+        }
+
+        #input-emoji-button {
+            position: absolute;
+            bottom: 0;
+            right: -14px;
+        }
+
+        #input-emoji-button-inner-wrapper {
+            border-radius: 5px;
+            text-align: center;
+            background: #666;
+            padding-left: 5px;
+            padding-right: 7px;
         }
 
         /* From Bootstrap */
@@ -177,6 +191,9 @@
         <span id="input-prompt"></span>
         <div id="input-box-wrapper">
             <input id="input-box" type="text" />
+        </div>
+        <div id="input-emoji-button">
+            <div id="input-emoji-button-inner-wrapper"></div>
         </div>
     </div>
 </body>

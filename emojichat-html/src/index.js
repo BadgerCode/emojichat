@@ -8,6 +8,7 @@ import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
 import { Chatbox } from './chatbox.js';
 import { State, SuggestionMode } from './state'
+import * as EmojiSelector from './component/emoji-selector';
 
 const MAX_INPUT_BYTES = 126;
 
@@ -28,6 +29,7 @@ function Init() {
     Chatbox.ScrollToBottom();
     InputPrompt.Reset();
     Suggestions.Reset();
+    EmojiSelector.Initialise();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
