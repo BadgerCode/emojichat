@@ -38,6 +38,14 @@ export function openURL(url) {
     LuaOutput.OpenURL(url);
 }
 
+export function setEmojiCategory(category) {
+    EmojiSelector.SetCategory(category);
+}
+
+export function insertEmoji(emojiCode) {
+    PasteText(emojiCode);
+}
+
 
 // Input
 export function setFadeTime(durationInSeconds) {
@@ -59,6 +67,7 @@ export function setActive(destination, jsonPlayerList, jsonActivePlayer) {
     Chatbox.SetInputActive();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
+    EmojiSelector.Hide();
 
     var lines = document.getElementsByClassName("line");
     for (var i = 0; i < lines.length; i++) {
@@ -75,6 +84,7 @@ export function setInactive() {
     clearSelection();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
+    EmojiSelector.Hide();
 
     var lines = document.getElementsByClassName("faded-line");
     for (var i = 0; i < lines.length; i++) {
@@ -255,31 +265,35 @@ Chatbox.InputBoxElement()
 
         var paste = (event.clipboardData || window.clipboardData).getData('text');
 
-        var inputBox = event.target;
-        var currentInput = inputBox.value;
-        var selectionStart = inputBox.selectionStart;
-        var selectionEnd = inputBox.selectionEnd;
-
-        var firstHalf = currentInput.substring(0, selectionStart);
-        var secondHalf = currentInput.substring(selectionEnd, currentInput.length);
-
-        var newInput = firstHalf + paste + secondHalf;
-        var pasteWasTooLarge = false;
-        while (byteLength(newInput) > MAX_INPUT_BYTES) {
-            pasteWasTooLarge = true;
-
-            paste = paste.substring(0, paste.length - 1);
-            newInput = firstHalf + paste + secondHalf
-        }
-
-        if (pasteWasTooLarge)
-            LuaOutput.PlayWarningSound();
-
-        inputBox.value = newInput;
-        var caretPosition = newInput.length - secondHalf.length;
-        inputBox.setSelectionRange(caretPosition, caretPosition);
-        triggerEvent(inputBox, "input");
+        PasteText(paste);
     });
+
+function PasteText(text) {
+    var inputBox = Chatbox.InputBoxElement();
+    var currentInput = inputBox.value;
+    var selectionStart = inputBox.selectionStart;
+    var selectionEnd = inputBox.selectionEnd;
+
+    var firstHalf = currentInput.substring(0, selectionStart);
+    var secondHalf = currentInput.substring(selectionEnd, currentInput.length);
+
+    var newInput = firstHalf + text + secondHalf;
+    var pasteWasTooLarge = false;
+    while (byteLength(newInput) > MAX_INPUT_BYTES) {
+        pasteWasTooLarge = true;
+
+        text = text.substring(0, text.length - 1);
+        newInput = firstHalf + text + secondHalf
+    }
+
+    if (pasteWasTooLarge)
+        LuaOutput.PlayWarningSound();
+
+    inputBox.value = newInput;
+    var caretPosition = newInput.length - secondHalf.length;
+    inputBox.setSelectionRange(caretPosition, caretPosition);
+    triggerEvent(inputBox, "input");
+}
 
 Chatbox.InputBoxElement()
     .addEventListener("input", function (event) {
