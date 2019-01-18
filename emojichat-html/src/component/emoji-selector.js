@@ -1,5 +1,6 @@
 import { convertEmoji, elementHasParent } from '../utils.js';
 import { getCategories } from '../emoji-search';
+import { Chatbox } from '../chatbox.js';
 
 const buttonIcon = "😃";
 
@@ -34,6 +35,8 @@ function IsHidden() { return state.hidden; }
 export function Show() {
     if (state.hidden == false) return;
 
+    Chatbox.SetOutputReduced();
+
     state.hidden = false;
     ListElement().style.display = "block";
 }
@@ -41,8 +44,11 @@ export function Show() {
 export function Hide() {
     if (state.hidden == true) return;
 
+    Chatbox.SetOutputFull();
+
     state.hidden = true;
     ListElement().style.display = "none";
+    SetCategory(firstCategory);
 }
 
 export function SetCategory(categoryName) {
@@ -100,10 +106,12 @@ function CategorySectionElement(categoryName) {
 
 
 OuterButtonElement().addEventListener("click", function (event) {
-    if (IsHidden())
-        Show()
-    else
+    if (IsHidden()) {
+        Show();
+    }
+    else {
         Hide();
+    }
 });
 
 document.getElementsByTagName("body")[0].addEventListener("click", function (event) {

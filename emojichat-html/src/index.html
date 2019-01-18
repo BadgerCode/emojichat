@@ -42,10 +42,17 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
             bottom: 25px;
             overflow: hidden;
             font-size: 14px;
+        }
+
+        .output-full {
+            right: 0;
+        }
+
+        .output-reduced {
+            right: 245px;
         }
 
         .line {
@@ -167,25 +174,32 @@
         #input-emoji-list {
             display: none;
             position: absolute;
-            right: 36px;
-            bottom: 24px;
-            background: rgba(255, 255, 255, 0.5);
-            width: 243px;
+            top: 0;
+            right: 0;
+            bottom: 25px;
+            width: 245px;
             line-height: 19px;
-            margin-top: 10px;
-            border-radius: 5px;
         }
 
         #input-emoji-list-emojis {
-            overflow-x: none;
+            overflow-x: hidden;
             overflow-y: scroll;
-            height: 120px;
+            position: absolute;
             padding: 5px 3px 5px 10px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 32px;
         }
 
         #input-emoji-category-list {
             text-align: center;
-            margin-top: 10px;
+            position: absolute;
+            bottom: 0;
+            padding: 5px 0;
+            left: 0;
+            right: 0;
+            border-top: 2px solid black;
         }
 
         .emoji-category-button {
@@ -244,7 +258,7 @@
 </head>
 
 <body id="body">
-    <div id="output"></div>
+    <div id="output" class="output-full"></div>
     <div id="input-suggestions"></div>
     <div id="input-emoji-list">
         <div id="input-emoji-list-emojis"></div>
