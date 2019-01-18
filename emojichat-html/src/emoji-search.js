@@ -10,7 +10,6 @@ export class EmojiOption {
 }
 
 const categoryNames = [
-    "recent",
     "people",
     "animals_and_nature",
     "food_and_drink",
@@ -18,12 +17,10 @@ const categoryNames = [
     "objects",
     "activity",
     "symbols",
-    "flags",
-    "custom"
+    "flags"
 ];
 
 const categorySymbols = {
-    "recent": "🕒",
     "people": "🙂",
     "animals_and_nature": "🌳",
     "food_and_drink": "🍰",
@@ -31,8 +28,7 @@ const categorySymbols = {
     "objects": "📦",
     "activity": "⚽",
     "symbols": "▶",
-    "flags": "🏴",
-    "custom": "#️⃣"
+    "flags": "🏴"
 };
 
 const categoryEmojis = {};
