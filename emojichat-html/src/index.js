@@ -80,11 +80,10 @@ export function setInactive() {
     State.Active = false;
     InputState.Reset();
 
-    Chatbox.SetInputInactive();
+    EmojiSelector.Hide();
     clearSelection();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
-    EmojiSelector.Hide();
 
     var lines = document.getElementsByClassName("faded-line");
     for (var i = 0; i < lines.length; i++) {
@@ -93,6 +92,7 @@ export function setInactive() {
     }
 
     Chatbox.ScrollToBottom();
+    Chatbox.SetInputInactive();
 }
 
 export function addOutput(rawTextComponents) {

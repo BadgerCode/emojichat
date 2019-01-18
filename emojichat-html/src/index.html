@@ -134,7 +134,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 19px;
+            right: 0;
             height: 25px;
             display: none;
         }
@@ -143,7 +143,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 26px;
+            right: 41px;
         }
 
         #input-box {
@@ -160,7 +160,7 @@
             position: absolute;
             cursor: pointer;
             bottom: 0;
-            right: -14px;
+            right: 0;
         }
 
         #input-emoji-button-inner-wrapper {
@@ -177,8 +177,10 @@
             top: 0;
             right: 0;
             bottom: 25px;
-            width: 245px;
+            width: 252px;
             line-height: 19px;
+            border-left: 1px solid orange;
+            /* background: black; */
         }
 
         #input-emoji-list-emojis {
@@ -189,7 +191,7 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 32px;
+            bottom: 34px;
         }
 
         #input-emoji-category-list {
@@ -199,7 +201,6 @@
             padding: 5px 0;
             left: 0;
             right: 0;
-            border-top: 2px solid black;
         }
 
         .emoji-category-button {
@@ -263,6 +264,9 @@
     <div id="input-emoji-list">
         <div id="input-emoji-list-emojis"></div>
         <div id="input-emoji-category-list"></div>
+        <div style="position: absolute;left: 0;bottom: 30px;height: 4px;right: 0;">
+            <div style="background: #ffb300;height: 50%;width: 75%;margin: 0 auto;margin-top: 2px;"></div>
+        </div>
     </div>
     <div id="input">
         <span id="input-prompt"></span>

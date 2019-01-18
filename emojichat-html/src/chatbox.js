@@ -26,11 +26,13 @@ class Chatbox {
     static SetOutputReduced() {
         Chatbox.OutputElement().classList.add("output-reduced");
         Chatbox.OutputElement().classList.remove("output-full");
+        Chatbox.OutputElement().style["overflow-y"] = "hidden";
     }
 
     static SetOutputFull() {
         Chatbox.OutputElement().classList.remove("output-reduced");
         Chatbox.OutputElement().classList.add("output-full");
+        Chatbox.OutputElement().style["overflow-y"] = "scroll";
     }
 }
 
