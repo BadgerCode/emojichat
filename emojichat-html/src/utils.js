@@ -21,7 +21,7 @@ export function convertURLs(text) {
 }
 
 export function convertEmoji(emoji) {
-    return twemoji.parse(emoji);
+    return twemoji.parse(emoji, { base: "asset://garrysmod/materials/emojichat/"});
 }
 
 export function replaceEmojisInText(text) {
@@ -33,7 +33,7 @@ export function replaceEmojisInText(text) {
             return emojilib.lib[shortname]["char"];
         }
     });
-    return twemoji.parse(replacedEmojis);
+    return convertEmoji(replacedEmojis);
 }
 
 export function colourToRGBA(colour) {
