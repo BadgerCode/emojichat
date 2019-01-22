@@ -144,17 +144,34 @@ function renderCategories(categories) {
     });
 }
 
+
 function renderCategory(categoryName) {
-    var category = categoriesList[categoryName];
+    var position = 0;
 
-    var categorySection = CategorySectionElement(categoryName);
-    var emojis = "";
+    function renderPartialCategory() {
+        var category = categoriesList[categoryName];
+        var finishPosition = Math.min(category.emojis.length, position + 60);
 
-    category.emojis.forEach(emoji => {
-        emojis += "<span class=\"emoji-category-list-emoji\" onclick=\"emojiChat.insertEmoji('" + emoji.code.replace("'", "\\'") + "')\">" + convertEmoji(emoji.char) + "</span>"
-    });
+        var categorySection = CategorySectionElement(categoryName);
+        var emojis = "";
 
-    categorySection.innerHTML += emojis;
+        for(; position < finishPosition; position++) {
+            var emoji = category.emojis[position];
+            emojis += "<span class=\"emoji-category-list-emoji\" onclick=\"emojiChat.insertEmoji('" + emoji.code.replace("'", "\\'") + "')\">" + convertEmoji(emoji.char) + "</span>";
+        }
 
-    category.rendered = true;
+        categorySection.innerHTML += emojis;
+
+        if(position >= category.emojis.length) {
+            category.rendered = true;
+            clearInterval(timer);
+            return;
+        }
+    }
+
+    var timer = setTimeout(function() {
+        timer = setInterval(renderPartialCategory, 10)
+    }, 100);
+    renderPartialCategory();
 }
+
