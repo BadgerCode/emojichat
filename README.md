@@ -1,5 +1,4 @@
 # Garry's Mod Emoji Chat
-_Version 1.0.1_<br>
 https://steamcommunity.com/sharedfiles/filedetails/?id=1622781878
 
 
