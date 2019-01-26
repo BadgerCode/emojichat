@@ -40,6 +40,7 @@ export function Show() {
 
     state.hidden = false;
     ListElement().style.display = "block";
+    SetCategory(firstCategory);
 }
 
 export function Hide() {
@@ -120,10 +121,6 @@ document.getElementsByTagName("body")[0].addEventListener("click", function (eve
         return;
 
     Hide();
-});
-
-window.addEventListener("load", function (event) {
-    SetCategory(firstCategory);
 });
 
 function renderCategories(categories) {
