@@ -60,10 +60,10 @@ function eChat.buildBox()
 
 	eChat.chatLog = vgui.Create( "DHTML" , eChat.frame )
 	eChat.chatLog:SetSize( eChat.frame:GetWide() - 10, eChat.frame:GetTall() - 40 )
-	eChat.chatLog:SetPos( 5, 30 )
+	eChat.chatLog:SetPos( 5, 35 )
 	eChat.chatLog.Paint = function( self, w, h )
 		if not eChat.Active then return end
-		draw.RoundedBox( 0, 0, 0, w, h, Color( 30, 30, 30, 100 ) )
+		--draw.RoundedBox( 0, -5, -5, w + 10, h + 10, Color( 30, 30, 30, 100 ) )
 	end
 	eChat.chatLog:SetVisible( true )
 	eChat.chatLog:SetHTML(eChat.config.html)

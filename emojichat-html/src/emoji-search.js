@@ -3,18 +3,57 @@ import * as emojilib from "emojilib";
 import { uniq } from 'lodash';
 
 export class EmojiOption {
-    constructor(name, character){
+    constructor(name, character) {
         this.name = name;
         this.char = character;
     }
 }
 
-const buildIndex = () => {
-    const map = {}
-    Object.keys(emojilib.lib).forEach(key => {
-        if (!emojilib.lib[key]["char"]) { return }
+const categoryNames = [
+    "people",
+    "animals_and_nature",
+    "food_and_drink",
+    "travel_and_places",
+    "objects",
+    "activity",
+    "symbols",
+    "flags"
+];
 
-        const words = emojilib.lib[key]["keywords"]
+const categorySymbols = {
+    "people": "🙂",
+    "animals_and_nature": "🌳",
+    "food_and_drink": "🍰",
+    "travel_and_places": "🚗",
+    "objects": "📦",
+    "activity": "⚽",
+    "symbols": "▶",
+    "flags": "🏴"
+};
+
+const categoryEmojis = {};
+
+
+const buildIndex = () => {
+    const map = {};
+
+    for(var i = 0; i < categoryNames.length; i++) {
+        categoryEmojis[categoryNames[i]] = [];
+    }
+
+    Object.keys(emojilib.lib).forEach(key => {
+        var emoji = emojilib.lib[key];
+        if (!emoji["char"]) { return }
+
+        var category = emoji["category"];
+        if (typeof (categoryEmojis[category]) === "undefined") {
+            console.log("Emoji '" + key + "' missing from categories. Category: '" + category + "'");
+        }
+        else {
+            categoryEmojis[category].push({ char: emoji["char"], code: ":" + key + ":" })
+        }
+
+        const words = emoji["keywords"]
         words.push(key)
 
         words.forEach(word => {
@@ -26,7 +65,7 @@ const buildIndex = () => {
         })
     })
 
-    return map
+    return map;
 }
 
 const map = buildIndex()
@@ -54,4 +93,15 @@ export function search(keyword) {
     }
 
     return result.map(k => new EmojiOption(k, emojilib.lib[k]["char"]));
+}
+
+
+export function getCategories() {
+    var categories = [];
+    for(var i = 0; i < categoryNames.length; i++) {
+        var name = categoryNames[i];
+        categories.push({ name: name, symbol: categorySymbols[name], emojis: categoryEmojis[name]});
+    }
+
+    return categories;
 }

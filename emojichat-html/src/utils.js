@@ -65,3 +65,14 @@ export function triggerEvent(el, type) {
         el.fireEvent('on' + e.eventType, e);
     }
 }
+
+export function elementHasParent(element, isParent) {
+    while(element != null) {
+        if(isParent(element))
+            return true;
+
+        element = element.parentElement;
+    }
+
+    return false;
+}

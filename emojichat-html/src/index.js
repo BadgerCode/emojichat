@@ -8,6 +8,7 @@ import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
 import { Chatbox } from './chatbox.js';
 import { State, SuggestionMode } from './state'
+import * as EmojiSelector from './component/emoji-selector';
 
 const MAX_INPUT_BYTES = 126;
 
@@ -28,12 +29,21 @@ function Init() {
     Chatbox.ScrollToBottom();
     InputPrompt.Reset();
     Suggestions.Reset();
+    EmojiSelector.Initialise();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
 
 export function openURL(url) {
     LuaOutput.OpenURL(url);
+}
+
+export function setEmojiCategory(category) {
+    EmojiSelector.SetCategory(category);
+}
+
+export function insertEmoji(emojiCode) {
+    PasteText(emojiCode);
 }
 
 
@@ -57,6 +67,7 @@ export function setActive(destination, jsonPlayerList, jsonActivePlayer) {
     Chatbox.SetInputActive();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
+    EmojiSelector.Hide();
 
     var lines = document.getElementsByClassName("line");
     for (var i = 0; i < lines.length; i++) {
@@ -69,7 +80,7 @@ export function setInactive() {
     State.Active = false;
     InputState.Reset();
 
-    Chatbox.SetInputInactive();
+    EmojiSelector.Hide();
     clearSelection();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
@@ -81,6 +92,7 @@ export function setInactive() {
     }
 
     Chatbox.ScrollToBottom();
+    Chatbox.SetInputInactive();
 }
 
 export function addOutput(rawTextComponents) {
@@ -253,31 +265,35 @@ Chatbox.InputBoxElement()
 
         var paste = (event.clipboardData || window.clipboardData).getData('text');
 
-        var inputBox = event.target;
-        var currentInput = inputBox.value;
-        var selectionStart = inputBox.selectionStart;
-        var selectionEnd = inputBox.selectionEnd;
-
-        var firstHalf = currentInput.substring(0, selectionStart);
-        var secondHalf = currentInput.substring(selectionEnd, currentInput.length);
-
-        var newInput = firstHalf + paste + secondHalf;
-        var pasteWasTooLarge = false;
-        while (byteLength(newInput) > MAX_INPUT_BYTES) {
-            pasteWasTooLarge = true;
-
-            paste = paste.substring(0, paste.length - 1);
-            newInput = firstHalf + paste + secondHalf
-        }
-
-        if (pasteWasTooLarge)
-            LuaOutput.PlayWarningSound();
-
-        inputBox.value = newInput;
-        var caretPosition = newInput.length - secondHalf.length;
-        inputBox.setSelectionRange(caretPosition, caretPosition);
-        triggerEvent(inputBox, "input");
+        PasteText(paste);
     });
+
+function PasteText(text) {
+    var inputBox = Chatbox.InputBoxElement();
+    var currentInput = inputBox.value;
+    var selectionStart = inputBox.selectionStart;
+    var selectionEnd = inputBox.selectionEnd;
+
+    var firstHalf = currentInput.substring(0, selectionStart);
+    var secondHalf = currentInput.substring(selectionEnd, currentInput.length);
+
+    var newInput = firstHalf + text + secondHalf;
+    var pasteWasTooLarge = false;
+    while (byteLength(newInput) > MAX_INPUT_BYTES) {
+        pasteWasTooLarge = true;
+
+        text = text.substring(0, text.length - 1);
+        newInput = firstHalf + text + secondHalf
+    }
+
+    if (pasteWasTooLarge)
+        LuaOutput.PlayWarningSound();
+
+    inputBox.value = newInput;
+    var caretPosition = newInput.length - secondHalf.length;
+    inputBox.setSelectionRange(caretPosition, caretPosition);
+    triggerEvent(inputBox, "input");
+}
 
 Chatbox.InputBoxElement()
     .addEventListener("input", function (event) {

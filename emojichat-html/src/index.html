@@ -42,10 +42,17 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
             bottom: 25px;
             overflow: hidden;
             font-size: 14px;
+        }
+
+        .output-full {
+            right: 0;
+        }
+
+        .output-reduced {
+            right: 245px;
         }
 
         .line {
@@ -127,7 +134,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 17px;
+            right: 0;
             height: 25px;
             display: none;
         }
@@ -136,7 +143,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
+            right: 41px;
         }
 
         #input-box {
@@ -148,6 +155,78 @@
             border: 0;
             width: 100%;
         }
+
+        #input-emoji-button {
+            position: absolute;
+            cursor: pointer;
+            bottom: 0;
+            right: 0;
+        }
+
+        #input-emoji-button-inner-wrapper {
+            border-radius: 5px;
+            text-align: center;
+            background: #666;
+            padding-left: 5px;
+            padding-right: 7px;
+        }
+
+        #input-emoji-list {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 25px;
+            width: 252px;
+            line-height: 19px;
+            border-left: 1px solid orange;
+            /* background: black; */
+        }
+
+        #input-emoji-list-emojis {
+            overflow-x: hidden;
+            overflow-y: scroll;
+            position: absolute;
+            padding: 5px 3px 5px 10px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 34px;
+        }
+
+        #input-emoji-category-list {
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            padding: 5px 0;
+            left: 0;
+            right: 0;
+        }
+
+        .emoji-category-button {
+            cursor: pointer;
+            padding: 2px 2px 1px 0px;
+            border-radius: 4px;
+        }
+
+        .emoji-category-button:hover, .emoji-category-list-emoji:hover {
+            background: rgba(128, 128, 255, 0.5);
+        }
+
+        .active-emoji-category-button {
+            background: white;
+        }
+
+        .emoji-category-emojis {
+            display: none;
+        }
+
+        .emoji-category-list-emoji {
+            cursor: pointer;
+        }
+
+
+
 
         /* From Bootstrap */
         body {
@@ -167,16 +246,35 @@
         *, ::after, ::before {
             box-sizing: border-box;
         }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+        }
     </style>
 </head>
 
 <body id="body">
-    <div id="output"></div>
+    <div id="output" class="output-full"></div>
     <div id="input-suggestions"></div>
+    <div id="input-emoji-list">
+        <div id="input-emoji-list-emojis"></div>
+        <div id="input-emoji-category-list"></div>
+        <div style="position: absolute;left: 0;bottom: 30px;height: 4px;right: 0;">
+            <div style="background: #ffb300;height: 50%;width: 75%;margin: 0 auto;margin-top: 2px;"></div>
+        </div>
+    </div>
     <div id="input">
         <span id="input-prompt"></span>
         <div id="input-box-wrapper">
             <input id="input-box" type="text" />
+        </div>
+        <div id="input-emoji-button" class="noselect">
+            <div id="input-emoji-button-inner-wrapper"></div>
         </div>
     </div>
 </body>

@@ -9,6 +9,13 @@ This compiles the web app and updates the `/emojichat/lua/emojichat/cl_html.lua`
 
 
 # Local development
+You will need to download [node and NPM](https://nodejs.org/en/).
+
+## First time setup
+> ```cd emojichat-html```<br>
+> ```npm install```
+
+## View the chatbox
 > ```npm start```
 
 This will do two things:
@@ -43,7 +50,7 @@ emojiChat.setInactive()
 
 **Add a message**
 ```javascript
-emojiChat.addOutput("[{\"colour\":{\"r\":130.0,\"b\":130.0,\"a\":255.0,\"g\":130.0},\"text\":\"[12:30:22] \"},{\"colour\":{\"r\":0.0,\"b\":0.0,\"a\":255.0,\"g\":200.0},\"text\":\"Badger\"},{\"colour\":{\"r\":255.0,\"b\":255.0,\"a\":255.0,\"g\":255.0},\"text\":\": A very cool message! :fox:\"}]")
+emojiChat.addOutput("[{\"colour\":{\"r\":130.0,\"b\":130.0,\"a\":255.0,\"g\":130.0},\"text\":\"[12:30:22] \"},{\"colour\":{\"r\":0.0,\"b\":0.0,\"a\":255.0,\"g\":200.0},\"text\":\"Badger\"},{\"colour\":{\"r\":255.0,\"b\":255.0,\"a\":255.0,\"g\":255.0},\"text\":\": A very cool message! :fox_face:\"}]")
 ```
 
 **Set when messages fade out**
