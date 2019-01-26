@@ -1,6 +1,7 @@
 import { convertEmoji, elementHasParent } from '../utils.js';
 import { getCategories } from '../emoji-search';
 import { Chatbox } from '../chatbox.js';
+import { Timing, milliseconds } from '../timing';
 
 const buttonIcon = "😃";
 
@@ -135,6 +136,7 @@ function renderCategories(categories) {
         EmojisListElement().innerHTML += "<div id=\"emoji-category-emojis-" + category.name + "\" class=\"emoji-category-emojis\"></div>";
 
         categoriesList[category.name] = {
+            name: category.name,
             emojis: category.emojis,
             rendered: false
         };
@@ -158,23 +160,20 @@ function renderCategory(categoryName) {
         .Do(() => emojiListPosition = renderPartialCategory(category, emojiListPosition, 60));
 }
 
-function renderPartialCategory() {
-    var category = categoriesList[categoryName];
-    var finishPosition = Math.min(category.emojis.length, position + 60);
-
-    var categorySection = CategorySectionElement(categoryName);
+function renderPartialCategory(category, emojiListPosition, maxEmojisToRender) {
+    var finishPosition = Math.min(category.emojis.length, emojiListPosition + maxEmojisToRender);
     var emojis = "";
 
-    for (; position < finishPosition; position++) {
-        var emoji = category.emojis[position];
+    for (; emojiListPosition < finishPosition; emojiListPosition++) {
+        var emoji = category.emojis[emojiListPosition];
         emojis += "<span class=\"emoji-category-list-emoji\" onclick=\"emojiChat.insertEmoji('" + emoji.code.replace("'", "\\'") + "')\">" + convertEmoji(emoji.char) + "</span>";
     }
 
-    categorySection.innerHTML += emojis;
+    CategorySectionElement(category.name).innerHTML += emojis;
 
-    if (position >= category.emojis.length) {
+    if (emojiListPosition >= category.emojis.length) {
         category.rendered = true;
-        clearInterval(timer);
-        return;
     }
+
+    return emojiListPosition;
 }
