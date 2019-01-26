@@ -53,7 +53,7 @@ export function Hide() {
 
 export function SetCategory(categoryName) {
     var previousCategory = state.activeCategory;
-    if(previousCategory !== "") {
+    if (previousCategory !== "") {
         CategorySectionElement(previousCategory).style.display = "none";
         CategoryButtonElement(previousCategory).classList.remove("active-emoji-category-button");
     }
@@ -62,7 +62,7 @@ export function SetCategory(categoryName) {
     CategorySectionElement(categoryName).style.display = "inline-block";
     CategoryButtonElement(categoryName).classList.add("active-emoji-category-button");
 
-    if(categoriesList[categoryName].rendered === false) {
+    if (categoriesList[categoryName].rendered === false) {
         renderCategory(categoryName);
     }
 }
@@ -121,7 +121,7 @@ document.getElementsByTagName("body")[0].addEventListener("click", function (eve
     Hide();
 });
 
-window.addEventListener("load", function(event) {
+window.addEventListener("load", function (event) {
     SetCategory(firstCategory);
 });
 
@@ -129,7 +129,7 @@ function renderCategories(categories) {
     categories.forEach(category => {
         CategoryListElement().innerHTML += "<span id=\"emoji-category-button-" + category.name + "\" class=\"emoji-category-button noselect\" "
             + "onclick=\"emojiChat.setEmojiCategory('" + category.name + "')\">"
-                 + convertEmoji(category.symbol)
+            + convertEmoji(category.symbol)
             + "</span>";
 
         EmojisListElement().innerHTML += "<div id=\"emoji-category-emojis-" + category.name + "\" class=\"emoji-category-emojis\"></div>";
@@ -139,39 +139,42 @@ function renderCategories(categories) {
             rendered: false
         };
 
-        if(firstCategory === "")
+        if (firstCategory === "")
             firstCategory = category.name;
     });
 }
 
 
 function renderCategory(categoryName) {
-    var position = 0;
+    var category = categoriesList[categoryName];
+    var emojiListPosition = 0;
 
-    function renderPartialCategory() {
-        var category = categoriesList[categoryName];
-        var finishPosition = Math.min(category.emojis.length, position + 60);
-
-        var categorySection = CategorySectionElement(categoryName);
-        var emojis = "";
-
-        for(; position < finishPosition; position++) {
-            var emoji = category.emojis[position];
-            emojis += "<span class=\"emoji-category-list-emoji\" onclick=\"emojiChat.insertEmoji('" + emoji.code.replace("'", "\\'") + "')\">" + convertEmoji(emoji.char) + "</span>";
-        }
-
-        categorySection.innerHTML += emojis;
-
-        if(position >= category.emojis.length) {
-            category.rendered = true;
-            clearInterval(timer);
-            return;
-        }
-    }
-
-    var timer = setTimeout(function() {
-        timer = setInterval(renderPartialCategory, 10)
-    }, 100);
-    renderPartialCategory();
+    Timing.After(milliseconds(50))
+        .Do(() => emojiListPosition = renderPartialCategory(category, emojiListPosition, 10))
+        .ThenAfter(milliseconds(50))
+        .Do(() => emojiListPosition = renderPartialCategory(category, emojiListPosition, 30))
+        .ThenAfterEvery(milliseconds(50))
+        .Until((iteration, duration) => emojiListPosition >= category.emojis.length)
+        .Do(() => emojiListPosition = renderPartialCategory(category, emojiListPosition, 60));
 }
 
+function renderPartialCategory() {
+    var category = categoriesList[categoryName];
+    var finishPosition = Math.min(category.emojis.length, position + 60);
+
+    var categorySection = CategorySectionElement(categoryName);
+    var emojis = "";
+
+    for (; position < finishPosition; position++) {
+        var emoji = category.emojis[position];
+        emojis += "<span class=\"emoji-category-list-emoji\" onclick=\"emojiChat.insertEmoji('" + emoji.code.replace("'", "\\'") + "')\">" + convertEmoji(emoji.char) + "</span>";
+    }
+
+    categorySection.innerHTML += emojis;
+
+    if (position >= category.emojis.length) {
+        category.rendered = true;
+        clearInterval(timer);
+        return;
+    }
+}
