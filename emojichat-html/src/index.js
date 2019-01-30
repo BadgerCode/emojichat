@@ -8,7 +8,7 @@ import * as InputState from './input-state.js';
 import * as InputPrompt from './component/input-prompt.js';
 import { Chatbox } from './chatbox.js';
 import { State, SuggestionMode } from './state'
-import * as EmojiSelector from './component/emoji-selector';
+// import * as EmojiSelector from './component/emoji-selector';
 
 const MAX_INPUT_BYTES = 126;
 
@@ -29,7 +29,7 @@ function Init() {
     Chatbox.ScrollToBottom();
     InputPrompt.Reset();
     Suggestions.Reset();
-    EmojiSelector.Initialise();
+    // EmojiSelector.Initialise();
     addOutput("[{\"colour\":{\"r\":0,\"g\":0,\"b\":0,\"a\":0},\"text\":\"\"}]") // Fixes weird clipping issue with first line of text
 }
 
@@ -39,7 +39,7 @@ export function openURL(url) {
 }
 
 export function setEmojiCategory(category) {
-    EmojiSelector.SetCategory(category);
+    // EmojiSelector.SetCategory(category);
 }
 
 export function insertEmoji(emojiCode) {
@@ -67,7 +67,7 @@ export function setActive(destination, jsonPlayerList, jsonActivePlayer) {
     Chatbox.SetInputActive();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
-    EmojiSelector.Hide();
+    // EmojiSelector.Hide();
 
     var lines = document.getElementsByClassName("line");
     for (var i = 0; i < lines.length; i++) {
@@ -80,7 +80,7 @@ export function setInactive() {
     State.Active = false;
     InputState.Reset();
 
-    EmojiSelector.Hide();
+    // EmojiSelector.Hide();
     clearSelection();
     State.SuggestionMode = SuggestionMode.None;
     Suggestions.Hide();
