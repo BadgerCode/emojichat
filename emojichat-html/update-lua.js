@@ -70,8 +70,8 @@ function BuildLuaIncludesFile(htmlFileNames) {
     var clientLines = "";
 
     htmlFileNames.forEach(htmlFileName => {
-        serverLines += `\n\tAddCSLuaFile('emojichat/cl_html/${htmlFileName}')`;
-        clientLines += `\n\tinclude('emojichat/cl_html/${htmlFileName}')`;
+        serverLines += `\n    AddCSLuaFile('emojichat/cl_html/${htmlFileName}')`;
+        clientLines += `\n    include('emojichat/cl_html/${htmlFileName}')`;
     });
 
     return LUA_INCLUDES_FILE_PATTERN.replace("{SERVER_LINES}", serverLines).replace("{CLIENT_LINES}", clientLines);
