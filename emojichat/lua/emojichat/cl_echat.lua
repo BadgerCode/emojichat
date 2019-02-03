@@ -10,7 +10,7 @@ eChat = {
 }
 
 eChat.config = {
-	html = "Loading...",
+	html = table.concat(emojichatHTML),
 	timestamps = true,
 	position = 1,	
 	fadeTime = 12,

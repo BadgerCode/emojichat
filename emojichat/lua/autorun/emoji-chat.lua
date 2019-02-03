@@ -1,9 +1,10 @@
+include("emojichat/sh_html_init.lua")
+
 if SERVER then
     resource.AddWorkshop(1622781878)
 
     AddCSLuaFile()
     AddCSLuaFile("emojichat/cl_echat.lua")
-    AddCSLuaFile("emojichat/cl_html.lua")
 
     AddCSLuaFile("emojichat/cl_chat-overrides.lua")
     AddCSLuaFile("emojichat/cl_hooks.lua")
@@ -16,7 +17,6 @@ if SERVER then
     include("emojichat/sv_chat.lua")
 elseif CLIENT then
     include("emojichat/cl_echat.lua")
-    include("emojichat/cl_html.lua")
 
     include("emojichat/cl_util.lua")
     include("emojichat/cl_text-component.lua")
