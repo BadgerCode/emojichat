@@ -1,4 +1,5 @@
 local oldAddText = chat.AddText
+
 function chat.AddText(...)
     eChat.AddLine(TextComponentBuilder.Build(...))
     oldAddText(...)

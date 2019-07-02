@@ -75,6 +75,7 @@ function eChat.hideBox()
     end
 
     eChat.HTMLOutput:SetInactive()
+    eChat.StopTyping()
 
     local children = eChat.frame:GetChildren()
     for _, pnl in pairs( children ) do
@@ -103,6 +104,7 @@ function eChat.showBox(mode)
     end
 
     eChat.HTMLOutput:SetActive(mode)
+    eChat.StartTyping()
 
     local children = eChat.frame:GetChildren()
     for _, pnl in pairs( children ) do
@@ -115,7 +117,7 @@ function eChat.showBox(mode)
     eChat.chatLog:RequestFocus()
 
     eChat.Active = true
-    hook.Run("StartChat")
+    hook.Run("StartChat", eChat.ChatMode == CHATMODE_TEAM)
 end
 
 function eChat.AddLine(textComponents)
@@ -136,4 +138,16 @@ function eChat.UpdateFadeTime(durationInSeconds)
     end
 
     eChat.HTMLOutput:UpdateFadeTime(eChat.config.fadeTime)
+end
+
+function eChat.StartTyping()
+    net.Start("SetTypingStatus")
+    net.WriteBool(true)
+    net.SendToServer()
+end
+
+function eChat.StopTyping()
+    net.Start("SetTypingStatus")
+    net.WriteBool(false)
+    net.SendToServer()
 end
