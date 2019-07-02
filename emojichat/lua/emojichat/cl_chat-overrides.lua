@@ -1,7 +1,7 @@
 local oldAddText = chat.AddText
 function chat.AddText(...)
-	eChat.AddLine(TextComponentBuilder.Build(...))
-	oldAddText(...)
+    eChat.AddLine(TextComponentBuilder.Build(...))
+    oldAddText(...)
 end
 
 chat.Open = eChat.showBox

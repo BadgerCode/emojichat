@@ -1,35 +1,35 @@
 HTMLChatCallbacks = {}
 
 function HTMLChatCallbacks.SendMessage(message, destination)
-	if string.Trim( message ) != "" then
+    if string.Trim( message ) != "" then
 
-		if destination == DESTINATION_TEAM then
-			LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
+        if destination == DESTINATION_TEAM then
+            LocalPlayer():ConCommand("say_team \"" .. (message or "") .. "\"")
 
-		elseif destination == DESTINATION_CONSOLE then
-			LocalPlayer():ConCommand(message or "")
+        elseif destination == DESTINATION_CONSOLE then
+            LocalPlayer():ConCommand(message or "")
 
-		else
-			LocalPlayer():ConCommand("say \"" .. message .. "\"")
+        else
+            LocalPlayer():ConCommand("say \"" .. message .. "\"")
 
-		end
-	end
+        end
+    end
 
-	eChat.hideBox()
-	HTMLChatCallbacks.InputChange("")
+    eChat.hideBox()
+    HTMLChatCallbacks.InputChange("")
 end
 
 function HTMLChatCallbacks.InputChange(newValue)
-	hook.Run("ChatTextChanged", newValue)
+    hook.Run("ChatTextChanged", newValue)
 end
 
 function HTMLChatCallbacks.CloseChat()
     eChat.hideBox()
-	gui.HideGameUI()
+    gui.HideGameUI()
 end
 
 function HTMLChatCallbacks.PlayWarningSound()
-	surface.PlaySound("resource/warning.wav")
+    surface.PlaySound("resource/warning.wav")
 end
 
 function HTMLChatCallbacks.HideMenu()
@@ -37,6 +37,6 @@ function HTMLChatCallbacks.HideMenu()
 end
 
 function HTMLChatCallbacks.OpenURL(url)
-	gui.OpenURL(url)
-	HTMLChatCallbacks.CloseChat()
+    gui.OpenURL(url)
+    HTMLChatCallbacks.CloseChat()
 end

@@ -1,6 +1,6 @@
 hook.Remove("PlayerConnect", "echat_playerconnect")
 hook.Add("PlayerConnect", "echat_playerconnect", function(name, ip)
-	PrintMessage(HUD_PRINTTALK, name .. " has joined the server.")
+    PrintMessage(HUD_PRINTTALK, name .. " has joined the server.")
 end)
 
 hook.Remove("PlayerInitialSpawn", "echat_playerinitialspawn")
