@@ -62,7 +62,7 @@
     "babel-preset-env": "^1.7.0",
     "concurrently": "^4.1.0",
     "emojilib": "^2.4.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "twemoji": "^11.2.0"
   }
 }
